@@ -1,0 +1,16 @@
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.244.82:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 532-969-401
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [17/Jul/2026 13:03:00] "GET / HTTP/1.1" 200 -
+INFO:app:Register
+INFO:werkzeug:127.0.0.1 - - [17/Jul/2026 13:03:04] "GET /register HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [17/Jul/2026 13:03:08] "GET /home HTTP/1.1" 200 -
+INFO:app:admin
+INFO:werkzeug:127.0.0.1 - - [17/Jul/2026 13:03:12] "GET /admin HTTP/1.1" 200 -
