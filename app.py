@@ -13,22 +13,6 @@ def login():
     app.logger.info("Login")
     return "<b>Login Page</b>"
 
-@app.route('/register')
-def register():
-    app.logger.info("Register")
-    return "Registration Page"
-
-@app.route('/home')
-def home():
-    app.logger.info("Home")
-    return "Home"
-
-@app.route('/admin')
-def admin():
-    app.logger.info("admin")
-    return "Admin"
-
-
 
 
 #main method called web server application
