@@ -397,3 +397,142 @@ INFO:app:Landing page
 INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:08] "GET / HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:09] "GET /static/css/custom.css HTTP/1.1" 304 -
 INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:09] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:08:22] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:08:22] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:08:22] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:13:13] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:13:13] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:13:13] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:16:34] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:16:34] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:16:34] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:17:05] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:17:05] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:17:05] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:37:54] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:37:54] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:37:54] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:39:55] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:39:55] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:39:55] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:41:47] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:41:47] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:41:47] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:44:03] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:44:04] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:44:04] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:44:17] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:44:17] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:44:17] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:47:40] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:47:41] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:47:41] "GET /static/assets/toolmates-icon.svg HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:47:41] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:48:47] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:48:47] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:48:47] "GET /static/assets/toolmates-icon.svg HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:48:47] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:48:58] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:48:58] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:48:58] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:51:34] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:51:34] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:51:34] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:53:11] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:53:11] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:53:11] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:54:48] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:54:48] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:54:48] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:03] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:03] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:03] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Register
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:10] "GET /register HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:10] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:11] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Register
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:14] "GET /register HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:14] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:56:14] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
