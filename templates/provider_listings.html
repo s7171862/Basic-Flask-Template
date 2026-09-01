@@ -2,9 +2,10 @@
 {% block content %}
 <main class="dashboard-page">
     <section class="dashboard-hero"><span class="dashboard-eyebrow">Provider workspace</span><h1>My Listings</h1><p>Add complete tool details so renters can search your listing in Toolly.</p><a href="/home" class="btn btn-outline-primary btn-sm mt-3">Back to dashboard</a></section>
-    <section class="workspace-panel"><h2>Add a tool</h2><form method="POST" enctype="multipart/form-data" class="row g-3">
+    <section class="workspace-panel"><h2>Add a tool</h2><form method="POST" enctype="multipart/form-data" class="row g-3" data-tool-value-form>
         <div class="col-md-6"><label class="form-label" for="title">Tool name</label><input class="form-control" id="title" name="title" required></div>
         <div class="col-md-3"><label class="form-label" for="daily_rate">Daily rate ($)</label><input class="form-control" id="daily_rate" name="daily_rate" type="number" min="0.01" step="0.01" required></div>
+        <div class="col-md-3"><label class="form-label" for="original_value">Original tool value ($)</label><input class="form-control" id="original_value" name="original_value" type="number" min="0.01" step="0.01" required><div class="form-text" data-value-suggestion></div></div>
         <div class="col-md-3"><label class="form-label" for="city">Queensland city</label><select class="form-select" id="city" name="city" data-location-city required><option value="">Choose a city</option></select></div>
         <div class="col-md-3"><label class="form-label" for="suburb">Suburb</label><select class="form-select" id="suburb" name="suburb" data-location-suburb required disabled><option value="">Choose a city first</option></select></div>
         <div class="col-md-4"><label class="form-label" for="tool_type">Tool type</label><input class="form-control" id="tool_type" name="tool_type" placeholder="e.g. Drill" required></div>

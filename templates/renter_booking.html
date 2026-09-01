@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="dashboard-page">
+    <section class="dashboard-hero"><span class="dashboard-eyebrow">Confirm your booking</span><h1>Rent {{ tool.title }}</h1><p>Choose dates within the provider’s availability, then review the simulated payment summary.</p><a href="/renter/browse" class="btn btn-outline-primary btn-sm mt-3">Back to browse tools</a></section>
+    <section class="workspace-panel booking-layout">
+        <div class="tool-card">{% if tool.toolphoto %}<img src="/{{ tool.toolphoto }}" alt="{{ tool.title }}">{% endif %}<div><h2>{{ tool.title }}</h2><p>{{ tool.brand }} · {{ tool.tool_type }} · {{ tool.suburb }}, {{ tool.city }}</p><p><strong>${{ '%.2f'|format(tool.daily_rate) }} per day</strong></p><p>Available from {{ tool.available_from }} to {{ tool.available_until }}</p></div></div>
+        <form method="POST" class="row g-3 mt-2" id="booking-form" data-rate="{{ tool.daily_rate }}" data-value="{{ tool.original_value }}">
+            <div class="col-md-6"><label class="form-label" for="start_date">Rental starts</label><input class="form-control" id="start_date" name="start_date" type="date" min="{{ tool.available_from }}" max="{{ tool.available_until }}" required></div>
+            <div class="col-md-6"><label class="form-label" for="end_date">Rental ends</label><input class="form-control" id="end_date" name="end_date" type="date" min="{{ tool.available_from }}" max="{{ tool.available_until }}" required></div>
+            <div class="col-12"><div class="form-check"><input class="form-check-input" id="insurance" name="insurance" type="checkbox"><label class="form-check-label" for="insurance">Add renter’s insurance</label></div><div class="form-text">Insurance starts at $5 for tools under $100 and doubles for every additional $100 of original value.</div></div>
+            <div class="col-12"><section class="price-breakdown"><h2>Price breakdown</h2><dl><div><dt>Rental duration</dt><dd id="rental-days">Choose dates</dd></div><div><dt>Rental cost</dt><dd id="rental-cost">$0.00</dd></div><div><dt>Refundable security deposit (10%)</dt><dd id="deposit-cost">$0.00</dd></div><div><dt>Renter’s insurance</dt><dd id="insurance-cost">$0.00</dd></div><div class="price-total"><dt>Total due today</dt><dd id="total-cost">$0.00</dd></div></dl></section></div>
+            <div class="col-12"><button class="btn btn-primary">Confirm simulated payment</button></div>
+        </form>
+    </section>
+</main>
+{% endblock %}
+{% block scripts %}
+<script>
+    const bookingForm = document.getElementById('booking-form');
+    const startInput = document.getElementById('start_date');
+    const endInput = document.getElementById('end_date');
+    const insuranceInput = document.getElementById('insurance');
+    const money = value => `$${value.toFixed(2)}`;
+    function updateBreakdown() {
+        const rate = Number(bookingForm.dataset.rate);
+        const originalValue = Number(bookingForm.dataset.value);
+        const deposit = originalValue * 0.10;
+        let days = 0;
+        if (startInput.value && endInput.value) {
+            days = Math.floor((new Date(`${endInput.value}T00:00:00`) - new Date(`${startInput.value}T00:00:00`)) / 86400000) + 1;
+            if (days < 1) days = 0;
+        }
+        const rental = rate * days;
+        const insurance = insuranceInput.checked ? 5 * (2 ** Math.max(0, Math.floor((originalValue - 0.01) / 100))) : 0;
+        document.getElementById('rental-days').textContent = days ? `${days} day${days === 1 ? '' : 's'}` : 'Choose valid dates';
+        document.getElementById('rental-cost').textContent = money(rental);
+        document.getElementById('deposit-cost').textContent = money(deposit);
+        document.getElementById('insurance-cost').textContent = money(insurance);
+        document.getElementById('total-cost').textContent = money(rental + deposit + insurance);
+    }
+    [startInput, endInput, insuranceInput].forEach(input => input.addEventListener('change', updateBreakdown));
+    updateBreakdown();
+</script>
+{% endblock %}

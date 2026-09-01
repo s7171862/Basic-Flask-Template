@@ -1,5 +1,6 @@
 from flask import *
 import sys, os, uuid
+from datetime import date
 import logging
 from interfaces.databaseinterface import Database
 from interfaces.hashing import *
@@ -67,6 +68,17 @@ def migrate_database():
     if 'location' not in tool_columns:
         # Kept for compatibility with earlier local database versions.
         conn.execute("ALTER TABLE tools ADD COLUMN location TEXT NOT NULL DEFAULT ''")
+    if 'original_value' not in tool_columns:
+        conn.execute("ALTER TABLE tools ADD COLUMN original_value REAL NOT NULL DEFAULT 0")
+    rental_columns = {column[1] for column in conn.execute("PRAGMA table_info(tool_rentals)").fetchall()}
+    for column, definition in {
+        'start_date': "DATE NOT NULL DEFAULT ''", 'end_date': "DATE NOT NULL DEFAULT ''",
+        'rental_days': 'INTEGER NOT NULL DEFAULT 1', 'rental_cost': 'REAL NOT NULL DEFAULT 0',
+        'security_deposit': 'REAL NOT NULL DEFAULT 0', 'insurance_selected': 'INTEGER NOT NULL DEFAULT 0',
+        'insurance_cost': 'REAL NOT NULL DEFAULT 0'
+    }.items():
+        if column not in rental_columns:
+            conn.execute(f"ALTER TABLE tool_rentals ADD COLUMN {column} {definition}")
     conn.commit()
     conn.close()
 
@@ -160,8 +172,10 @@ def provider_listings():
         description = request.form['description'].strip()
         try:
             daily_rate = float(request.form['daily_rate'])
+            original_value = float(request.form['original_value'])
         except ValueError:
             daily_rate = 0
+            original_value = 0
         city = request.form['city'].strip()
         suburb = request.form['suburb'].strip()
         tool_type = request.form['tool_type'].strip()
@@ -171,7 +185,7 @@ def provider_listings():
         available_until = request.form['available_until']
         tool_photo = request.files.get('toolphoto')
         photo_is_valid = tool_photo and tool_photo.filename and allowed_file(tool_photo.filename)
-        if not all([title, description, city, suburb, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or available_until < available_from:
+        if not all([title, description, city, suburb, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or original_value <= 0 or available_until < available_from:
             flash('Complete every tool field, use a valid daily rate, and choose valid availability dates.')
         elif not photo_is_valid:
             flash('A tool photo is required. Please upload a PNG, JPG, JPEG, or GIF image.')
@@ -181,9 +195,9 @@ def provider_listings():
             tool_photo_path = os.path.join(app.config['TOOL_UPLOAD_FOLDER'], photo_filename)
             tool_photo.save(tool_photo_path)
             DATABASE.ModifyQuery(
-                """INSERT INTO tools (providerid, title, description, daily_rate, city, suburb, location, tool_type, brand, tool_condition, toolphoto, available_from, available_until)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (session['userid'], title, description, daily_rate, city, suburb, f"{suburb}, {city}", tool_type, brand, tool_condition, tool_photo_path, available_from, available_until)
+                """INSERT INTO tools (providerid, title, description, daily_rate, original_value, city, suburb, location, tool_type, brand, tool_condition, toolphoto, available_from, available_until)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (session['userid'], title, description, daily_rate, original_value, city, suburb, f"{suburb}, {city}", tool_type, brand, tool_condition, tool_photo_path, available_from, available_until)
             )
             flash('Your tool has been added to the Toolly marketplace.')
             return redirect('/provider/listings')
@@ -211,9 +225,11 @@ def provider_edit_listing(tool_id):
         available_until = request.form['available_until']
         try:
             daily_rate = float(request.form['daily_rate'])
+            original_value = float(request.form['original_value'])
         except ValueError:
             daily_rate = 0
-        if not all([title, description, city, suburb, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or available_until < available_from:
+            original_value = 0
+        if not all([title, description, city, suburb, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or original_value <= 0 or available_until < available_from:
             flash('Complete every tool field, use a valid daily rate, and choose valid availability dates.')
             return render_template('provider_edit_listing.html', tool=tool)
 
@@ -229,9 +245,9 @@ def provider_edit_listing(tool_id):
             tool_photo.save(tool_photo_path)
 
         DATABASE.ModifyQuery(
-            """UPDATE tools SET title = ?, description = ?, daily_rate = ?, city = ?, suburb = ?, location = ?, tool_type = ?, brand = ?, tool_condition = ?, toolphoto = ?, available_from = ?, available_until = ?
+            """UPDATE tools SET title = ?, description = ?, daily_rate = ?, original_value = ?, city = ?, suburb = ?, location = ?, tool_type = ?, brand = ?, tool_condition = ?, toolphoto = ?, available_from = ?, available_until = ?
                WHERE toolid = ? AND providerid = ?""",
-            (title, description, daily_rate, city, suburb, f"{suburb}, {city}", tool_type, brand, tool_condition, tool_photo_path, available_from, available_until, tool_id, session['userid'])
+            (title, description, daily_rate, original_value, city, suburb, f"{suburb}, {city}", tool_type, brand, tool_condition, tool_photo_path, available_from, available_until, tool_id, session['userid'])
         )
         flash('Your tool listing has been updated.')
         return redirect('/provider/listings')
@@ -321,9 +337,7 @@ def renter_browse():
             DATABASE.ModifyQuery("INSERT OR IGNORE INTO tool_wishlists (renterid, toolid) VALUES (?, ?)", (session['userid'], tool_id))
             flash('Tool added to your wishlist.')
         elif tool and request.form.get('action') == 'rent':
-            DATABASE.ModifyQuery("INSERT INTO tool_rentals (toolid, renterid, providerid, total) VALUES (?, ?, ?, ?)", (tool_id, session['userid'], tool[0]['providerid'], tool[0]['daily_rate']))
-            DATABASE.ModifyQuery("UPDATE tools SET is_available = 0 WHERE toolid = ?", (tool_id,))
-            flash('Rental started. It is now in My Rentals.')
+            return redirect(url_for('renter_book_tool', tool_id=tool_id))
         return redirect('/renter/browse')
     filters = {key: request.args.get(key, '').strip() for key in ('city', 'suburb', 'tool_type', 'brand', 'tool_condition', 'available_on')}
     max_price = request.args.get('max_price', '').strip()
@@ -348,6 +362,43 @@ def renter_browse():
     query += " ORDER BY tools.toolid DESC"
     tools = DATABASE.ViewQuery(query, tuple(params)) or []
     return render_template('renter_browse.html', tools=tools, filters=filters, max_price=max_price, show_unavailable=show_unavailable)
+
+@app.route('/renter/tools/<int:tool_id>/book', methods=['GET', 'POST'])
+def renter_book_tool(tool_id):
+    if not renter_only():
+        return redirect('./')
+    tool_result = DATABASE.ViewQuery("SELECT * FROM tools WHERE toolid = ? AND is_available = 1", (tool_id,))
+    if not tool_result:
+        flash('This tool is no longer available.')
+        return redirect('/renter/browse')
+    tool = tool_result[0]
+    if request.method == 'POST':
+        try:
+            start_date = date.fromisoformat(request.form['start_date'])
+            end_date = date.fromisoformat(request.form['end_date'])
+            available_from = date.fromisoformat(tool['available_from'])
+            available_until = date.fromisoformat(tool['available_until'])
+        except ValueError:
+            flash('Choose valid rental dates.')
+            return render_template('renter_booking.html', tool=tool)
+        if start_date > end_date or start_date < available_from or end_date > available_until:
+            flash('Choose dates within the provider’s available period.')
+            return render_template('renter_booking.html', tool=tool)
+        rental_days = (end_date - start_date).days + 1
+        rental_cost = tool['daily_rate'] * rental_days
+        security_deposit = tool['original_value'] * 0.10
+        insurance_selected = 1 if request.form.get('insurance') else 0
+        insurance_cost = (5 * (2 ** max(0, int((tool['original_value'] - 0.01) // 100)))) if insurance_selected else 0
+        total = rental_cost + security_deposit + insurance_cost
+        DATABASE.ModifyQuery(
+            """INSERT INTO tool_rentals (toolid, renterid, providerid, total, start_date, end_date, rental_days, rental_cost, security_deposit, insurance_selected, insurance_cost)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (tool_id, session['userid'], tool['providerid'], total, start_date.isoformat(), end_date.isoformat(), rental_days, rental_cost, security_deposit, insurance_selected, insurance_cost)
+        )
+        DATABASE.ModifyQuery("UPDATE tools SET is_available = 0 WHERE toolid = ?", (tool_id,))
+        flash('Booking confirmed. Your simulated payment has been recorded.')
+        return redirect('/renter/rentals')
+    return render_template('renter_booking.html', tool=tool)
 
 @app.route('/renter/rentals', methods=['GET', 'POST'])
 def renter_rentals():

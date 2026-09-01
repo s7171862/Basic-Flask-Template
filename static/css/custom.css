@@ -325,6 +325,13 @@
 .tool-card { display: flex; gap: 18px; align-items: flex-start; }
 .tool-card > img { width: 150px; height: 120px; flex: 0 0 150px; border-radius: 10px; object-fit: cover; }
 .tool-card > div { min-width: 0; }
+.price-breakdown { margin-top: 8px; padding: 20px; border-radius: 14px; background: #fff7d9; border: 1px solid #e7c468; }
+.price-breakdown h2 { font-size: 1.25rem; }
+.price-breakdown dl { margin: 0; }
+.price-breakdown dl > div { display: flex; justify-content: space-between; gap: 20px; padding: 7px 0; }
+.price-breakdown dt { font-weight: 600; color: #5f4827; }
+.price-breakdown dd { margin: 0; font-weight: 700; color: #4d3510; }
+.price-breakdown .price-total { margin-top: 8px; padding-top: 12px; border-top: 1px solid #d8b24b; font-size: 1.12rem; }
 .data-list h3 { margin-bottom: 8px; color: #4d3510; font-size: 1.2rem; font-weight: 800; }
 .data-list p { margin-bottom: 12px; color: #5f4827; }
 .inline-actions, .action-forms, .action-forms form { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
