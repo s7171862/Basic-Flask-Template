@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+    <main class="dashboard-page">
+        <section class="dashboard-hero">
+            <span class="dashboard-eyebrow">Provider workspace</span>
+            <h1>{{ title }}</h1>
+            <p>{{ description }}</p>
+        </section>
+        <section class="workspace-empty-state">
+            <h2>Nothing to show yet</h2>
+            <p>This area is ready for your Toolly data as you add listings and complete rentals.</p>
+            <a href="/home" class="btn btn-outline-primary">Back to dashboard</a>
+            <button type="button" class="btn btn-primary">{{ action_label }}</button>
+        </section>
+    </main>
+{% endblock %}

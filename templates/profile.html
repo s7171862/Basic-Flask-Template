@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+    <main class="registration-page">
+        <section class="registration-card" aria-labelledby="profile-title">
+            <div class="registration-heading">
+                <span class="dashboard-eyebrow">Your account</span>
+                <h1 id="profile-title">Edit profile</h1>
+                <p>Keep your details and profile photo up to date.</p>
+            </div>
+
+            <form action="/profile" enctype="multipart/form-data" method="POST" class="registration-form">
+                <div class="row g-3">
+                    <div class="col-sm-6"><label class="form-label" for="fname">First name</label><input class="form-control" type="text" id="fname" name="fname" value="{{ user['firstname'] }}" autocomplete="given-name" required></div>
+                    <div class="col-sm-6"><label class="form-label" for="lname">Last name</label><input class="form-control" type="text" id="lname" name="lname" value="{{ user['lastname'] }}" autocomplete="family-name" required></div>
+                    <div class="col-12"><label class="form-label" for="email">Email address</label><input class="form-control" type="email" id="email" name="email" value="{{ user['email'] }}" autocomplete="email" required></div>
+                    <div class="col-12">
+                        <label class="form-label" for="profilephoto">Change profile photo <span class="optional-label">optional</span></label>
+                        <div class="profile-edit-upload">
+                            {% if user['profilephoto'] %}<img src="/{{ user['profilephoto'] }}" alt="Current profile photo">{% else %}<span class="profile-edit-placeholder" aria-hidden="true"></span>{% endif %}
+                            <input class="form-control" type="file" id="profilephoto" name="file" accept=".png,.jpg,.jpeg,.gif,image/png,image/jpeg,image/gif">
+                        </div>
+                        <div class="form-text">Leave this blank to keep your current photo.</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary registration-submit" type="submit">Save changes</button>
+            </form>
+            <p class="registration-login"><a href="/home">Back to dashboard</a></p>
+        </section>
+    </main>
+{% endblock %}

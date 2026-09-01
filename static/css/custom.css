@@ -305,6 +305,29 @@
 .dashboard-tip h3 { margin-bottom: 12px; color: #4d3510; font-weight: 800; }
 .dashboard-tip p { margin-bottom: 0; color: #5f4827; line-height: 1.7; }
 
+.workspace-empty-state {
+    padding: 42px 24px;
+    border: 1px dashed #d8b24b;
+    border-radius: 18px;
+    background: #fffdf6;
+    text-align: center;
+}
+
+.workspace-empty-state h2 { color: #4d3510; font-weight: 800; }
+.workspace-empty-state p { max-width: 520px; margin: 12px auto 24px; color: #5f4827; }
+.workspace-empty-state .btn { margin: 4px; }
+
+.workspace-panel { margin-bottom: 24px; padding: 26px; border: 1px solid #e7c468; border-radius: 18px; background: #fffdf6; }
+.workspace-panel h2 { margin-bottom: 18px; color: #4d3510; font-weight: 800; }
+.data-list { display: grid; gap: 14px; }
+.data-list article { padding: 18px; border: 1px solid #ead58e; border-radius: 13px; background: #fff; }
+.data-list h3 { margin-bottom: 8px; color: #4d3510; font-size: 1.2rem; font-weight: 800; }
+.data-list p { margin-bottom: 12px; color: #5f4827; }
+.inline-actions, .action-forms, .action-forms form { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.action-forms { margin-top: 16px; }
+.action-forms form { flex: 1 1 360px; }
+.action-forms .form-control, .action-forms .form-select { width: auto; flex: 1 1 130px; }
+
 @media (max-width: 991.98px) {
     .custom-navbar .navbar-brand { font-size: 1.55rem; }
     .profile-dropdown { right: 68px; }
@@ -361,3 +384,7 @@
 .registration-submit:focus { border-color: #c98c05; background: linear-gradient(135deg, #f9d358, #e6a40d); color: #3b2a16; }
 .registration-login { margin: 22px 0 0; color: #654e2a; text-align: center; }
 .registration-login a { color: #8c5b07; font-weight: 800; }
+
+.profile-edit-upload { display: flex; align-items: center; gap: 14px; }
+.profile-edit-upload img,
+.profile-edit-placeholder { width: 58px; height: 58px; flex: 0 0 58px; border: 2px solid #d9bd6c; border-radius: 50%; background: #fff; object-fit: cover; }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ToolMates</title>
+    <title>Toolly</title>
 
     <!-- CSS Links -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
@@ -19,7 +19,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
             <div class="container position-relative navbar-content">
-                <a href="/" class="navbar-brand">ToolMates</a>
+                <a href="/" class="navbar-brand">Toolly</a>
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse2" aria-controls="navbarCollapse2" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -44,7 +44,7 @@
                         <div class="dropdown-menu dropdown-menu-end profile-menu" aria-labelledby="profileMenu">
                             <div class="profile-menu-heading">
                                 <span class="profile-menu-kicker">My Profile</span>
-                                <strong>{{ session.get('name', 'ToolMates member') }}</strong>
+                                <strong>{{ session.get('name', 'Toolly member') }}</strong>
                                 <small>{{ session.get('permission', '') }}</small>
                             </div>
                             <div class="profile-menu-body">
@@ -55,7 +55,7 @@
                                 {% else %}
                                     <p>Manage your account and preferences.</p>
                                 {% endif %}
-                                <a href="#" class="btn btn-primary btn-sm w-100">Edit Profile</a>
+                                <a href="/profile" class="btn btn-primary btn-sm w-100">Edit Profile</a>
                             </div>
                         </div>
                     </div>

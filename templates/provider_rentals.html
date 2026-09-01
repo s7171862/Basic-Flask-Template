@@ -1,0 +1,4 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="dashboard-page"><section class="dashboard-hero"><span class="dashboard-eyebrow">Provider workspace</span><h1>Active Rentals</h1><p>These renter bookings are stored in your Toolly rental records.</p></section><section class="workspace-panel">{% if rentals %}<div class="data-list">{% for rental in rentals %}<article><h3>{{ rental.title }}</h3><p>Rented by {{ rental.renter_name }} · ${{ '%.2f'|format(rental.total) }}</p><form method="POST"><input type="hidden" name="rentalid" value="{{ rental.rentalid }}"><button class="btn btn-primary">Mark returned</button></form></article>{% endfor %}</div>{% else %}<p>No active rentals right now.</p>{% endif %}</section></main>
+{% endblock %}

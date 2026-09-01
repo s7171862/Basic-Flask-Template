@@ -1,0 +1,4 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="dashboard-page"><section class="dashboard-hero"><span class="dashboard-eyebrow">Your rental records</span><h1>{{ title }}</h1><p>Your rental history is saved in the Toolly database.</p></section><section class="workspace-panel">{% if rentals %}<div class="data-list">{% for rental in rentals %}<article><h3>{{ rental.title }}</h3><p>Provider: {{ rental.provider_name }} · ${{ '%.2f'|format(rental.total) }}</p></article>{% endfor %}</div>{% else %}<p>No rentals to show yet.</p>{% endif %}</section></main>
+{% endblock %}

@@ -1,0 +1,4 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="dashboard-page"><section class="dashboard-hero"><span class="dashboard-eyebrow">Saved tools</span><h1>My Wishlist</h1><p>Your saved tools are stored to your Toolly account.</p></section><section class="workspace-panel">{% if tools %}<div class="data-list">{% for tool in tools %}<article><h3>{{ tool.title }}</h3><p>{{ tool.description }} · ${{ '%.2f'|format(tool.daily_rate) }} / day</p><form method="POST"><input type="hidden" name="wishlistid" value="{{ tool.wishlistid }}"><button class="btn btn-outline-primary">Remove</button></form></article>{% endfor %}</div>{% else %}<p>Your wishlist is empty.</p>{% endif %}</section></main>
+{% endblock %}

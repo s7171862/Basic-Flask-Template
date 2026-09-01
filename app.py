@@ -1,5 +1,5 @@
 from flask import *
-import sys, os
+import sys, os, uuid
 import logging
 from interfaces.databaseinterface import Database
 from interfaces.hashing import *
@@ -45,7 +45,21 @@ def init_database():
         conn.commit()
         conn.close()
 
+def migrate_database():
+    """Create feature tables for existing local databases as well."""
+    import sqlite3
+    with open("database/createscript.txt", "r") as f:
+        schema = f.read()
+    conn = sqlite3.connect("database/test.db")
+    for statement in schema.split(';'):
+        if statement.strip().upper().startswith('CREATE TABLE'):
+            statement = statement.replace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', 1)
+            conn.execute(statement)
+    conn.commit()
+    conn.close()
+
 init_database()
+migrate_database()
 DATABASE = Database("database/test.db", app.logger)
 
 #---VIEW FUNCTIONS----------------------------------------------------
@@ -118,6 +132,215 @@ def home():
 
     flash('Your account does not have a valid dashboard role. Please log in again.')
     return redirect('./logout')
+
+def provider_only():
+    """Keep provider tools separate from renter accounts."""
+    return 'userid' in session and session.get('permission') == 'User (Tool Provider)'
+
+@app.route('/provider/listings', methods=['GET', 'POST'])
+def provider_listings():
+    if not provider_only():
+        return redirect('./')
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        description = request.form['description'].strip()
+        try:
+            daily_rate = float(request.form['daily_rate'])
+        except ValueError:
+            daily_rate = 0
+        location = request.form['location'].strip()
+        tool_type = request.form['tool_type'].strip()
+        brand = request.form['brand'].strip()
+        tool_condition = request.form['tool_condition'].strip()
+        available_from = request.form['available_from']
+        available_until = request.form['available_until']
+        if not all([title, description, location, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or available_until < available_from:
+            flash('Complete every tool field, use a valid daily rate, and choose valid availability dates.')
+        else:
+            DATABASE.ModifyQuery(
+                """INSERT INTO tools (providerid, title, description, daily_rate, location, tool_type, brand, tool_condition, available_from, available_until)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (session['userid'], title, description, daily_rate, location, tool_type, brand, tool_condition, available_from, available_until)
+            )
+            flash('Your tool has been added to the Toolly marketplace.')
+            return redirect('/provider/listings')
+    tools = DATABASE.ViewQuery("SELECT * FROM tools WHERE providerid = ? ORDER BY toolid DESC", (session['userid'],)) or []
+    return render_template('provider_listings.html', tools=tools)
+
+@app.route('/provider/active-rentals', methods=['GET', 'POST'])
+def provider_active_rentals():
+    if not provider_only():
+        return redirect('./')
+    if request.method == 'POST':
+        rental_id = request.form.get('rentalid', type=int)
+        rental = DATABASE.ViewQuery("SELECT toolid FROM tool_rentals WHERE rentalid = ? AND providerid = ? AND status = 'active'", (rental_id, session['userid']))
+        DATABASE.ModifyQuery(
+            "UPDATE tool_rentals SET status = 'completed', completed_at = datetime('now','localtime') WHERE rentalid = ? AND providerid = ? AND status = 'active'",
+            (rental_id, session['userid'])
+        )
+        if rental:
+            DATABASE.ModifyQuery("UPDATE tools SET is_available = 1 WHERE toolid = ?", (rental[0]['toolid'],))
+        flash('Rental marked as completed.')
+        return redirect('/provider/active-rentals')
+    rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS renter_name
+                                  FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid
+                                  JOIN users ON users.userid = tool_rentals.renterid
+                                  WHERE tool_rentals.providerid = ? AND tool_rentals.status = 'active' ORDER BY tool_rentals.rentalid DESC""", (session['userid'],)) or []
+    return render_template('provider_rentals.html', rentals=rentals)
+
+@app.route('/provider/earnings')
+def provider_earnings():
+    if not provider_only():
+        return redirect('./')
+    summary = DATABASE.ViewQuery("SELECT COUNT(*) AS completed_rentals, COALESCE(SUM(total), 0) AS total FROM tool_rentals WHERE providerid = ? AND status = 'completed'", (session['userid'],))[0]
+    return render_template('provider_earnings.html', summary=summary)
+
+@app.route('/provider/past-rentals', methods=['GET', 'POST'])
+def provider_past_rentals():
+    if not provider_only():
+        return redirect('./')
+    if request.method == 'POST':
+        rental_id = request.form.get('rentalid', type=int)
+        rental = DATABASE.ViewQuery("SELECT * FROM tool_rentals WHERE rentalid = ? AND providerid = ? AND status = 'completed'", (rental_id, session['userid']))
+        if not rental:
+            return redirect('/provider/past-rentals')
+        if request.form.get('action') == 'rate':
+            rating = request.form.get('rating', type=int)
+            comment = request.form.get('comment', '').strip()
+            if rating and 1 <= rating <= 5:
+                DATABASE.ModifyQuery("INSERT OR REPLACE INTO ratings (rentalid, providerid, renterid, rating, comment) VALUES (?, ?, ?, ?, ?)", (rental_id, session['userid'], rental[0]['renterid'], rating, comment))
+                flash('Customer rating saved.')
+        elif request.form.get('action') == 'claim':
+            description = request.form.get('description', '').strip()
+            if description:
+                DATABASE.ModifyQuery("INSERT INTO claims (rentalid, providerid, description) VALUES (?, ?, ?)", (rental_id, session['userid'], description))
+                flash('Your claim has been submitted.')
+        return redirect('/provider/past-rentals')
+    rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS renter_name
+                                  FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid
+                                  JOIN users ON users.userid = tool_rentals.renterid
+                                  WHERE tool_rentals.providerid = ? AND tool_rentals.status = 'completed' ORDER BY tool_rentals.completed_at DESC""", (session['userid'],)) or []
+    return render_template('provider_past_rentals.html', rentals=rentals)
+
+def renter_only():
+    return 'userid' in session and session.get('permission') == 'User (Renter)'
+
+@app.route('/renter/browse', methods=['GET', 'POST'])
+def renter_browse():
+    if not renter_only():
+        return redirect('./')
+    if request.method == 'POST':
+        tool_id = request.form.get('toolid', type=int)
+        tool = DATABASE.ViewQuery("SELECT * FROM tools WHERE toolid = ? AND is_available = 1", (tool_id,))
+        if tool and request.form.get('action') == 'wishlist':
+            DATABASE.ModifyQuery("INSERT OR IGNORE INTO tool_wishlists (renterid, toolid) VALUES (?, ?)", (session['userid'], tool_id))
+            flash('Tool added to your wishlist.')
+        elif tool and request.form.get('action') == 'rent':
+            DATABASE.ModifyQuery("INSERT INTO tool_rentals (toolid, renterid, providerid, total) VALUES (?, ?, ?, ?)", (tool_id, session['userid'], tool[0]['providerid'], tool[0]['daily_rate']))
+            DATABASE.ModifyQuery("UPDATE tools SET is_available = 0 WHERE toolid = ?", (tool_id,))
+            flash('Rental started. It is now in My Rentals.')
+        return redirect('/renter/browse')
+    filters = {key: request.args.get(key, '').strip() for key in ('location', 'tool_type', 'brand', 'tool_condition', 'available_on')}
+    max_price = request.args.get('max_price', '').strip()
+    show_unavailable = request.args.get('show_unavailable') == '1'
+    query = "SELECT tools.*, users.firstname || ' ' || users.lastname AS provider_name FROM tools JOIN users ON users.userid = tools.providerid WHERE 1 = 1"
+    params = []
+    for field in ('location', 'tool_type', 'brand', 'tool_condition'):
+        if filters[field]:
+            query += f" AND lower(tools.{field}) LIKE ?"
+            params.append('%' + filters[field].lower() + '%')
+    if max_price:
+        try:
+            query += " AND tools.daily_rate <= ?"
+            params.append(float(max_price))
+        except ValueError:
+            flash('Maximum price must be a number.')
+    if filters['available_on']:
+        query += " AND tools.available_from <= ? AND tools.available_until >= ?"
+        params.extend([filters['available_on'], filters['available_on']])
+    if not show_unavailable:
+        query += " AND tools.is_available = 1"
+    query += " ORDER BY tools.toolid DESC"
+    tools = DATABASE.ViewQuery(query, tuple(params)) or []
+    return render_template('renter_browse.html', tools=tools, filters=filters, max_price=max_price, show_unavailable=show_unavailable)
+
+@app.route('/renter/rentals')
+def renter_rentals():
+    if not renter_only():
+        return redirect('./')
+    rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS provider_name
+                                  FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid JOIN users ON users.userid = tool_rentals.providerid
+                                  WHERE tool_rentals.renterid = ? AND tool_rentals.status = 'active' ORDER BY tool_rentals.rentalid DESC""", (session['userid'],)) or []
+    return render_template('renter_rentals.html', rentals=rentals, title='My Rentals')
+
+@app.route('/renter/wishlist', methods=['GET', 'POST'])
+def renter_wishlist():
+    if not renter_only():
+        return redirect('./')
+    if request.method == 'POST':
+        DATABASE.ModifyQuery("DELETE FROM tool_wishlists WHERE wishlistid = ? AND renterid = ?", (request.form.get('wishlistid', type=int), session['userid']))
+        flash('Tool removed from your wishlist.')
+        return redirect('/renter/wishlist')
+    tools = DATABASE.ViewQuery("""SELECT tool_wishlists.wishlistid, tools.*, users.firstname || ' ' || users.lastname AS provider_name
+                                FROM tool_wishlists JOIN tools ON tools.toolid = tool_wishlists.toolid JOIN users ON users.userid = tools.providerid
+                                WHERE tool_wishlists.renterid = ? ORDER BY tool_wishlists.wishlistid DESC""", (session['userid'],)) or []
+    return render_template('renter_wishlist.html', tools=tools)
+
+@app.route('/renter/past-rentals')
+def renter_past_rentals():
+    if not renter_only():
+        return redirect('./')
+    rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS provider_name
+                                  FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid JOIN users ON users.userid = tool_rentals.providerid
+                                  WHERE tool_rentals.renterid = ? AND tool_rentals.status = 'completed' ORDER BY tool_rentals.completed_at DESC""", (session['userid'],)) or []
+    return render_template('renter_rentals.html', rentals=rentals, title='Past Rentals')
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    """View and update the signed-in user's account details."""
+    if 'userid' not in session:
+        return redirect('./')
+
+    user_id = session['userid']
+    results = DATABASE.ViewQuery("SELECT * FROM users WHERE userid = ?", (user_id,))
+    if not results:
+        session.clear()
+        return redirect('./')
+    user = results[0]
+
+    if request.method == 'POST':
+        firstname = request.form['fname'].strip()
+        lastname = request.form['lname'].strip()
+        email = request.form['email'].strip().lower()
+
+        existing_email = DATABASE.ViewQuery(
+            "SELECT userid FROM users WHERE email = ? AND userid != ?", (email, user_id)
+        )
+        if existing_email:
+            flash('That email address is already in use.')
+            return render_template('profile.html', user=user)
+
+        filepath = user['profilephoto'] or ''
+        file = request.files.get('file')
+        if file and file.filename:
+            if not allowed_file(file.filename):
+                flash('Please upload a PNG, JPG, JPEG, or GIF image.')
+                return render_template('profile.html', user=user)
+            extension = secure_filename(file.filename).rsplit('.', 1)[1].lower()
+            filename = f"{user_id}_{uuid.uuid4().hex}.{extension}"
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+        DATABASE.ModifyQuery(
+            "UPDATE users SET firstname = ?, lastname = ?, email = ?, profilephoto = ? WHERE userid = ?",
+            (firstname, lastname, email, filepath, user_id)
+        )
+        session['name'] = firstname + ' ' + lastname
+        session['profilephoto'] = filepath
+        flash('Your profile has been updated.')
+        return redirect('/profile')
+
+    return render_template('profile.html', user=user)
 
 @app.route('/login', methods=["GET","POST"])
 def login():

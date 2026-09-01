@@ -19,5 +19,65 @@ CREATE TABLE messages (
    FOREIGN KEY(author) REFERENCES users(userid) ON DELETE CASCADE
 );
 
+CREATE TABLE ratings (
+   ratingid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   rentalid INTEGER NOT NULL UNIQUE,
+   providerid INTEGER NOT NULL,
+   renterid INTEGER NOT NULL,
+   rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+   comment TEXT NULL,
+   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid)
+);
+
+CREATE TABLE claims (
+   claimid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   rentalid INTEGER NOT NULL,
+   providerid INTEGER NOT NULL,
+   description TEXT NOT NULL,
+   status TEXT NOT NULL DEFAULT 'open',
+   created_at DATE DEFAULT (datetime('now','localtime')),
+   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid)
+);
+
+CREATE TABLE tools (
+   toolid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   providerid INTEGER NOT NULL,
+   title TEXT NOT NULL,
+   description TEXT NOT NULL,
+   daily_rate REAL NOT NULL,
+   location TEXT NOT NULL,
+   tool_type TEXT NOT NULL,
+   brand TEXT NOT NULL,
+   tool_condition TEXT NOT NULL,
+   available_from DATE NOT NULL,
+   available_until DATE NOT NULL,
+   is_available INTEGER NOT NULL DEFAULT 1,
+   created_at DATE DEFAULT (datetime('now','localtime')),
+   FOREIGN KEY(providerid) REFERENCES users(userid) ON DELETE CASCADE
+);
+
+CREATE TABLE tool_rentals (
+   rentalid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   toolid INTEGER NOT NULL,
+   renterid INTEGER NOT NULL,
+   providerid INTEGER NOT NULL,
+   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed')),
+   total REAL NOT NULL,
+   created_at DATE DEFAULT (datetime('now','localtime')),
+   completed_at DATE NULL,
+   FOREIGN KEY(toolid) REFERENCES tools(toolid),
+   FOREIGN KEY(renterid) REFERENCES users(userid),
+   FOREIGN KEY(providerid) REFERENCES users(userid)
+);
+
+CREATE TABLE tool_wishlists (
+   wishlistid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   renterid INTEGER NOT NULL,
+   toolid INTEGER NOT NULL,
+   UNIQUE(renterid, toolid),
+   FOREIGN KEY(renterid) REFERENCES users(userid) ON DELETE CASCADE,
+   FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE
+);
+
 INSERT INTO users (email, firstname, lastname, password, permission) values
 ('admin@admin', 'Firstname', 'Lastname', 'admin', 'admin');
