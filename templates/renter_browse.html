@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <main class="dashboard-page">
-    <section class="dashboard-hero"><span class="dashboard-eyebrow">Find a tool</span><h1>Browse Tools</h1><p>Search the Toolly database by location, tool details, price, and availability.</p></section>
+    <section class="dashboard-hero"><span class="dashboard-eyebrow">Find a tool</span><h1>Browse Tools</h1><p>Search the Toolly database by location, tool details, price, and availability.</p><a href="/home" class="btn btn-outline-primary btn-sm mt-3">Back to dashboard</a></section>
     <section class="workspace-panel"><h2>Search filters</h2><form method="GET" class="row g-3">
         <div class="col-md-4"><label class="form-label" for="city">Queensland city</label><select class="form-select" id="city" name="city" data-location-city data-selected="{{ filters.city }}"><option value="">Any city</option></select></div>
         <div class="col-md-4"><label class="form-label" for="suburb">Suburb</label><select class="form-select" id="suburb" name="suburb" data-location-suburb data-selected="{{ filters.suburb }}"><option value="">Any suburb</option></select></div>
