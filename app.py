@@ -64,6 +64,20 @@ def logout():
     session.clear()
     return redirect('./')
 
+@app.route('/begin-registration/<role>')
+def begin_registration(role):
+    """Allow a registration form to be opened only from the landing page."""
+    registration_routes = {
+        'renter': 'register_renter',
+        'provider': 'register_provider'
+    }
+    if role not in registration_routes:
+        return redirect('./')
+
+    session.clear()
+    session['registration_access_role'] = role
+    return redirect(url_for(registration_routes[role], access='1'))
+
 @app.route('/admin', methods=["GET","POST"])
 def admin():
 
@@ -147,6 +161,14 @@ def login():
 @app.route('/register/renter', methods=['GET','POST'])
 def register_renter():
     app.logger.info("Register Renter")
+    if request.method == 'GET':
+        if request.args.get('access') != '1' or session.get('registration_access_role') != 'renter':
+            return redirect('./')
+        session.pop('registration_access_role', None)
+        session['registration_form_role'] = 'renter'
+    elif session.get('registration_form_role') != 'renter':
+        return redirect('./')
+
     message = "Please register as a Renter"
     if request.method == "POST":
 
@@ -191,6 +213,7 @@ def register_renter():
                 session['userid'] = user_data['userid']
                 session['name'] = user_data['firstname'] + " " + user_data['lastname']
                 session['profilephoto'] = user_data['profilephoto']
+                session.pop('registration_form_role', None)
                 
                 return redirect('/home')
 
@@ -199,6 +222,14 @@ def register_renter():
 @app.route('/register/provider', methods=['GET','POST'])
 def register_provider():
     app.logger.info("Register Provider")
+    if request.method == 'GET':
+        if request.args.get('access') != '1' or session.get('registration_access_role') != 'provider':
+            return redirect('./')
+        session.pop('registration_access_role', None)
+        session['registration_form_role'] = 'provider'
+    elif session.get('registration_form_role') != 'provider':
+        return redirect('./')
+
     message = "Please register as a Tool Provider"
     if request.method == "POST":
 
@@ -243,6 +274,7 @@ def register_provider():
                 session['userid'] = user_data['userid']
                 session['name'] = user_data['firstname'] + " " + user_data['lastname']
                 session['profilephoto'] = user_data['profilephoto']
+                session.pop('registration_form_role', None)
                 
                 return redirect('/home')
 
@@ -261,7 +293,7 @@ if __name__ == '__main__':
     print("About to start Flask app...")
     sys.stdout.flush()
     try:
-        app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=True, threaded=True) #runs a local development server with automatic reloads
+        app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False, threaded=True) #templates and static files still refresh without Flask's debug error screen
     except Exception as e:
         print(f"Error: {e}")
         sys.stderr.write(f"Stderr: {e}\n")

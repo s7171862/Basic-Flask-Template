@@ -1597,3 +1597,96 @@ INFO:app:Register Provider
 INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:54:28] "GET /register/provider HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:54:28] "GET /static/css/custom.css HTTP/1.1" 200 -
 INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:54:28] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:56:09] "GET /home HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:56:09] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:56:09] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:56:09] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:app:Register Provider
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:56:16] "GET /register/provider HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:56:16] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:56:16] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:57:14] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:57:14] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:57:14] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\George Schmidt\\Desktop\\Basic-Flask-Template\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 615-122-954
+INFO:werkzeug: * Detected change in 'C:\\Users\\George Schmidt\\Desktop\\Basic-Flask-Template\\app.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 615-122-954
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:47] "GET /register/renter HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:47] "GET /register/ HTTP/1.1" 404 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:53] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:54] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:54] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:55] "GET /begin-registration/renter HTTP/1.1" 302 -
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:55] "GET /register/renter HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:55] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 14:59:55] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:03] "GET /register/renter HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:03] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:03] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:35] "GET /register/renter HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:35] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:35] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:38] "GET /register/renter HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:38] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:38] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:40] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:40] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:40] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:44] "GET /home HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:44] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:45] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:01:45] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:02:04] "GET /register/renter HTTP/1.1" 302 -
+INFO:app:Register Provider
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:02:04] "GET /register/provider HTTP/1.1" 302 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:09] "GET /register/renter HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:09] "GET /register/ HTTP/1.1" 404 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:19] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:19] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:19] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:21] "GET /begin-registration/renter HTTP/1.1" 302 -
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:21] "GET /register/renter?access=1 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:22] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:22] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:24] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:24] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:24] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:27] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:27] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 15:06:27] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
