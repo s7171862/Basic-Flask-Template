@@ -15,6 +15,17 @@ UPLOAD_FOLDER = 'profilephotos'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "Type in secret line of text"
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+@app.after_request
+def disable_development_cache(response):
+    """Always serve the newest pages and styles while developing locally."""
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 # Function to check the file extension
 def allowed_file(filename):
@@ -41,10 +52,9 @@ DATABASE = Database("database/test.db", app.logger)
 @app.route('/')
 def landing():
     app.logger.info("Landing page")
-    if 'permission' in session:
-        if session['permission'] == 'admin':
-            return redirect('./admin')
-        return redirect('./home')
+    # Treat the landing page as a fresh starting point for every visit.
+    # This prevents an old browser session from automatically reopening a dashboard.
+    session.clear()
     return render_template("landing.html")
 
 
@@ -83,13 +93,17 @@ def home():
 
     app.logger.info("Home")
     
-    # Render different home page based on user permission
-    if session['permission'] == 'User (Renter)':
-        return render_template("home_renter.html")
-    elif session['permission'] == 'User (Tool Provider)':
-        return render_template("home_provider.html")
-    else:
-        return render_template("home.html")
+    # Each user role has its own dashboard; there is no standalone home page.
+    home_templates = {
+        'User (Renter)': 'home_renter.html',
+        'User (Tool Provider)': 'home_provider.html'
+    }
+    template = home_templates.get(session.get('permission'))
+    if template:
+        return render_template(template)
+
+    flash('Your account does not have a valid dashboard role. Please log in again.')
+    return redirect('./logout')
 
 @app.route('/login', methods=["GET","POST"])
 def login():
@@ -247,7 +261,7 @@ if __name__ == '__main__':
     print("About to start Flask app...")
     sys.stdout.flush()
     try:
-        app.run(host='0.0.0.0', port=5000, debug=False, use_debugger=False, use_reloader=False, threaded=True) #runs a local server on port 5000
+        app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=True, threaded=True) #runs a local development server with automatic reloads
     except Exception as e:
         print(f"Error: {e}")
         sys.stderr.write(f"Stderr: {e}\n")

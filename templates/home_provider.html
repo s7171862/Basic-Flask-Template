@@ -1,12 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="container mt-5">
-        <h2>Welcome Tool Provider, {{session['name']}}!</h2>
-        <p>Ready to earn by renting out your tools?</p>
+    <div class="dashboard-page">
+        <section class="dashboard-hero">
+            <span class="dashboard-eyebrow">Provider dashboard</span>
+            <h1>Welcome back, {{ session['name'] }}.</h1>
+            <p>Keep your tool business moving with everything important in one simple workspace.</p>
+        </section>
         
-        <div class="row mt-4">
+        <div class="row g-4 dashboard-grid">
             <div class="col-md-6">
                 <div class="feature-box">
+                    <span class="feature-label">Your inventory</span>
                     <h3>My Listings</h3>
                     <p>View, edit, or add new tools to your rental inventory.</p>
                     <a href="#" class="btn btn-primary">Manage Listings</a>
@@ -14,6 +18,7 @@
             </div>
             <div class="col-md-6">
                 <div class="feature-box">
+                    <span class="feature-label">In progress</span>
                     <h3>Active Rentals</h3>
                     <p>Track current rentals, manage reservations, and coordinate with renters.</p>
                     <a href="#" class="btn btn-primary">View Rentals</a>
@@ -21,23 +26,22 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row g-4 dashboard-grid">
             <div class="col-md-6">
                 <div class="feature-box">
+                    <span class="feature-label">Your business</span>
                     <h3>Earnings</h3>
                     <p>View your earnings, payment history, and withdraw your balance.</p>
                     <a href="#" class="btn btn-primary">View Earnings</a>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="feature-box">
-                    <h3>My Profile</h3>
-                    <p>Update your profile, view your provider rating, and manage your preferences.</p>
-                    <a href="#" class="btn btn-primary">Edit Profile</a>
+                <div class="dashboard-tip">
+                    <span class="feature-label">Your account</span>
+                    <h3>Your profile is now in the menu.</h3>
+                    <p>Select your photo in the top-right corner to view or edit your profile details.</p>
                 </div>
             </div>
         </div>
-
-        {% include "profilephoto.html" %}
     </div>
 {% endblock %}

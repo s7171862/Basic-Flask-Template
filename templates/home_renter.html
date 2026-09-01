@@ -1,12 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="container mt-5">
-        <h2>Welcome Renter, {{session['name']}}!</h2>
-        <p>Ready to rent the tools you need?</p>
+    <div class="dashboard-page">
+        <section class="dashboard-hero">
+            <span class="dashboard-eyebrow">Renter dashboard</span>
+            <h1>Welcome back, {{ session['name'] }}.</h1>
+            <p>Find the right tool for your next project and keep your rentals organised in one place.</p>
+        </section>
         
-        <div class="row mt-4">
+        <div class="row g-4 dashboard-grid">
             <div class="col-md-6">
                 <div class="feature-box">
+                    <span class="feature-label">Discover</span>
                     <h3>Browse Tools</h3>
                     <p>Explore available tools in your area and find exactly what you need for your project.</p>
                     <a href="#" class="btn btn-primary">Start Browsing</a>
@@ -14,6 +18,7 @@
             </div>
             <div class="col-md-6">
                 <div class="feature-box">
+                    <span class="feature-label">Keep track</span>
                     <h3>My Rentals</h3>
                     <p>View your active rentals, track return dates, and manage your borrowed tools.</p>
                     <a href="#" class="btn btn-primary">View Rentals</a>
@@ -21,23 +26,22 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row g-4 dashboard-grid">
             <div class="col-md-6">
                 <div class="feature-box">
+                    <span class="feature-label">Save for later</span>
                     <h3>My Wishlist</h3>
                     <p>Save tools you want to rent later and get notified when they become available.</p>
                     <a href="#" class="btn btn-primary">View Wishlist</a>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="feature-box">
-                    <h3>My Profile</h3>
-                    <p>Update your profile, view your rental history, and manage your preferences.</p>
-                    <a href="#" class="btn btn-primary">Edit Profile</a>
+                <div class="dashboard-tip">
+                    <span class="feature-label">Your account</span>
+                    <h3>Your profile is now in the menu.</h3>
+                    <p>Select your photo in the top-right corner to view or edit your profile details.</p>
                 </div>
             </div>
         </div>
-
-        {% include "profilephoto.html" %}
     </div>
 {% endblock %}

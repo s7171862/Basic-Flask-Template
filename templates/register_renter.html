@@ -1,33 +1,27 @@
 {% extends "layout.html" %}
 {% block content %}
-
-    <h2>Register as a Renter</h2>
-
-    {{message}}
-
-    <form action="/register/renter" enctype="multipart/form-data" method="POST">
-
-        <label for="fname">First name:</label><br>
-            <input type="text" id="fname" name="fname" value="" required><br>
-            
-        <label for="lname">Last name:</label><br>
-            <input type="text" id="lname" name="lname" value="" required><br>
-
-        <label for="email">Email:</label><br>
-            <input type="email" id="email" name="email" value="" required><br>
-
-        <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password" value="" required><br>
-
-        <label for="email">Password Confirm:</label><br>
-            <input type="password" id="passwordconfirm" name="passwordconfirm" value="" required><br>
-        <br>
-
-        <label for="profilephoto">Profile Photo:</label><br>
-            <input type="file" name="file">
-        <br>
-
-        <input type="submit" value="Submit">
-    </form> 
-
+    <main class="registration-page">
+        <section class="registration-card" aria-labelledby="registration-title">
+            <div class="registration-heading">
+                <span class="dashboard-eyebrow">Join ToolMates</span>
+                <h1 id="registration-title">Register as a renter</h1>
+                <p>Create your account to find the right tools for every project.</p>
+            </div>
+            {% if message and message != 'Please register as a Renter' %}
+                <div class="alert alert-info registration-message" role="alert">{{ message }}</div>
+            {% endif %}
+            <form action="/register/renter" enctype="multipart/form-data" method="POST" class="registration-form">
+                <div class="row g-3">
+                    <div class="col-sm-6"><label class="form-label" for="fname">First name</label><input class="form-control" type="text" id="fname" name="fname" autocomplete="given-name" required></div>
+                    <div class="col-sm-6"><label class="form-label" for="lname">Last name</label><input class="form-control" type="text" id="lname" name="lname" autocomplete="family-name" required></div>
+                    <div class="col-12"><label class="form-label" for="email">Email address</label><input class="form-control" type="email" id="email" name="email" autocomplete="email" required></div>
+                    <div class="col-sm-6"><label class="form-label" for="password">Password</label><input class="form-control" type="password" id="password" name="password" autocomplete="new-password" required></div>
+                    <div class="col-sm-6"><label class="form-label" for="passwordconfirm">Confirm password</label><input class="form-control" type="password" id="passwordconfirm" name="passwordconfirm" autocomplete="new-password" required></div>
+                    <div class="col-12"><label class="form-label" for="profilephoto">Profile photo <span class="optional-label">optional</span></label><input class="form-control" type="file" id="profilephoto" name="file" accept=".png,.jpg,.jpeg,.gif,image/png,image/jpeg,image/gif"><div class="form-text">PNG, JPG, JPEG, or GIF. You can add one later.</div></div>
+                </div>
+                <button class="btn btn-primary registration-submit" type="submit">Create renter account</button>
+            </form>
+            <p class="registration-login">Already have an account? <a href="/login">Log in</a></p>
+        </section>
+    </main>
 {% endblock %}
