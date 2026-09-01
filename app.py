@@ -24,6 +24,16 @@ def allowed_file(filename):
 DATABASE = Database("database/test.db", app.logger)
 
 #---VIEW FUNCTIONS----------------------------------------------------
+@app.route('/')
+def landing():
+    app.logger.info("Landing page")
+    if 'permission' in session:
+        if session['permission'] == 'admin':
+            return redirect('./admin')
+        return redirect('./home')
+    return render_template("landing.html")
+
+
 @app.route('/logout')
 def logout():
     app.logger.info("Log out")
@@ -60,7 +70,7 @@ def home():
     app.logger.info("Home")
     return render_template("home.html")
 
-@app.route('/', methods=["GET","POST"])
+@app.route('/login', methods=["GET","POST"])
 def login():
     app.logger.info("Login")
 
@@ -78,6 +88,9 @@ def login():
         if results:
             userdetails = results[0] #row in the user table (Python Dictionary)
             if check_password(userdetails['password'], password):
+                if ':' not in userdetails['password']:
+                    DATABASE.ModifyQuery("UPDATE users SET password = ? WHERE userid = ?", (hash_password(password), userdetails['userid']))
+
                 message = "Login Successful"
 
                 session['permission'] = userdetails['permission']
@@ -149,4 +162,4 @@ def serve_file(filename):
 
 #main method called web server application
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True) #runs a local server on port 5000
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False) #runs a local server on port 5000

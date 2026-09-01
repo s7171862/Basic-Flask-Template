@@ -270,3 +270,130 @@ INFO:werkzeug:Press CTRL+C to quit
 INFO:werkzeug: * Restarting with stat
 WARNING:werkzeug: * Debugger is active!
 INFO:werkzeug: * Debugger PIN: 615-122-954
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:17] "GET / HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:17] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:17] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:18] "GET /profilephotos/DROPS2.png HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:18] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:18] "GET /logout HTTP/1.1" 302 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:19] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:19] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:52:19] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug: * Detected change in 'C:\\Users\\George Schmidt\\Desktop\\Basic-Flask-Template\\interfaces\\hashing.py', reloading
+INFO:werkzeug: * Restarting with stat
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:59:40] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:59:40] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:59:40] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:59:41] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:59:41] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 11:59:41] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:00:48] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:00:48] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:00:48] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:00:51] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:00:52] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:00:52] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:00:53] "POST / HTTP/1.1" 405 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:01:00] "POST / HTTP/1.1" 405 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:01:06] "POST / HTTP/1.1" 405 -
+INFO:app:Register
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:01:09] "GET /register HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:01:09] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:01:09] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:01:33] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:01:33] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:01:33] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:02:07] "POST / HTTP/1.1" 405 -
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Login
+INFO:app:Register
+INFO:app:Register
+INFO:app:ImmutableMultiDict([])
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:39] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:39] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:39] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:41] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:41] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:41] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:43] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:43] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:43] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:44] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:44] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:44] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:44] "GET /profilephotos/DROPS2.png HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:44] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:49] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:49] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:49] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:49] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Register
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:58] "GET /register HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:58] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:04:58] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Register
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:05:40] "POST /register HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:05:40] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:05:40] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Register
+INFO:app:ImmutableMultiDict([('file', <FileStorage: '' ('application/octet-stream')>)])
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:16] "POST /register HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:16] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:16] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:16] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:33] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:33] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:33] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:42] "POST /login HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:42] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:42] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:42] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:06:58] "POST /backdoor HTTP/1.1" 404 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:03] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:03] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:03] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:04] "GET / HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:04] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:05] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:05] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:07] "GET / HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:07] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:07] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:07] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:08] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:08] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:09] "GET /static/css/custom.css HTTP/1.1" 304 -
+INFO:werkzeug:127.0.0.1 - - [01/Sep/2026 12:07:09] "GET /static/js/new_ajax_helper.js HTTP/1.1" 304 -

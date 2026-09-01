@@ -8,5 +8,11 @@ def hash_password(password):
 
 #for decrypting the password in the database - returns True if correct
 def check_password(hashed_password, user_password):
-    password, salt = hashed_password.split(':')
+    if not hashed_password:
+        return False
+
+    if ':' not in hashed_password:
+        return hashed_password == user_password
+
+    password, salt = hashed_password.split(':', 1)
     return password == hashlib.sha256(salt.encode() + user_password.encode()).hexdigest()
