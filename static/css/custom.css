@@ -319,14 +319,20 @@
 
 .workspace-panel { margin-bottom: 24px; padding: 26px; border: 1px solid #e7c468; border-radius: 18px; background: #fffdf6; }
 .workspace-panel h2 { margin-bottom: 18px; color: #4d3510; font-weight: 800; }
+.workspace-panel-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .data-list { display: grid; gap: 14px; }
 .data-list article { padding: 18px; border: 1px solid #ead58e; border-radius: 13px; background: #fff; }
+.tool-card { display: flex; gap: 18px; align-items: flex-start; }
+.tool-card > img { width: 150px; height: 120px; flex: 0 0 150px; border-radius: 10px; object-fit: cover; }
+.tool-card > div { min-width: 0; }
 .data-list h3 { margin-bottom: 8px; color: #4d3510; font-size: 1.2rem; font-weight: 800; }
 .data-list p { margin-bottom: 12px; color: #5f4827; }
 .inline-actions, .action-forms, .action-forms form { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .action-forms { margin-top: 16px; }
 .action-forms form { flex: 1 1 360px; }
 .action-forms .form-control, .action-forms .form-select { width: auto; flex: 1 1 130px; }
+
+@media (max-width: 575.98px) { .tool-card > img { width: 100px; height: 100px; flex-basis: 100px; } }
 
 @media (max-width: 991.98px) {
     .custom-navbar .navbar-brand { font-size: 1.55rem; }

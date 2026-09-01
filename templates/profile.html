@@ -19,7 +19,7 @@
                             {% if user['profilephoto'] %}<img src="/{{ user['profilephoto'] }}" alt="Current profile photo">{% else %}<span class="profile-edit-placeholder" aria-hidden="true"></span>{% endif %}
                             <input class="form-control" type="file" id="profilephoto" name="file" accept=".png,.jpg,.jpeg,.gif,image/png,image/jpeg,image/gif">
                         </div>
-                        <div class="form-text">Leave this blank to keep your current photo.</div>
+                        <div class="form-text">Accepted file types: PNG, JPG, JPEG, or GIF. Leave blank to keep your current photo.</div>
                     </div>
                 </div>
                 <button class="btn btn-primary registration-submit" type="submit">Save changes</button>

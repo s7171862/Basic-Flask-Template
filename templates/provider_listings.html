@@ -2,18 +2,20 @@
 {% block content %}
 <main class="dashboard-page">
     <section class="dashboard-hero"><span class="dashboard-eyebrow">Provider workspace</span><h1>My Listings</h1><p>Add complete tool details so renters can search your listing in Toolly.</p></section>
-    <section class="workspace-panel"><h2>Add a tool</h2><form method="POST" class="row g-3">
+    <section class="workspace-panel"><div class="workspace-panel-heading"><h2>Add a tool</h2><a href="/home" class="btn btn-outline-primary btn-sm">Back to dashboard</a></div><form method="POST" enctype="multipart/form-data" class="row g-3">
         <div class="col-md-6"><label class="form-label" for="title">Tool name</label><input class="form-control" id="title" name="title" required></div>
         <div class="col-md-3"><label class="form-label" for="daily_rate">Daily rate ($)</label><input class="form-control" id="daily_rate" name="daily_rate" type="number" min="0.01" step="0.01" required></div>
-        <div class="col-md-3"><label class="form-label" for="location">Location</label><input class="form-control" id="location" name="location" placeholder="e.g. Brisbane" required></div>
+        <div class="col-md-3"><label class="form-label" for="city">Queensland city</label><select class="form-select" id="city" name="city" data-location-city required><option value="">Choose a city</option></select></div>
+        <div class="col-md-3"><label class="form-label" for="suburb">Suburb</label><select class="form-select" id="suburb" name="suburb" data-location-suburb required disabled><option value="">Choose a city first</option></select></div>
         <div class="col-md-4"><label class="form-label" for="tool_type">Tool type</label><input class="form-control" id="tool_type" name="tool_type" placeholder="e.g. Drill" required></div>
         <div class="col-md-4"><label class="form-label" for="brand">Brand</label><input class="form-control" id="brand" name="brand" placeholder="e.g. Makita" required></div>
         <div class="col-md-4"><label class="form-label" for="tool_condition">Condition</label><select class="form-select" id="tool_condition" name="tool_condition" required><option value="">Choose condition</option><option>New</option><option>Excellent</option><option>Good</option><option>Fair</option></select></div>
+        <div class="col-12"><label class="form-label" for="toolphoto">Tool photo</label><input class="form-control" id="toolphoto" name="toolphoto" type="file" accept=".png,.jpg,.jpeg,.gif,image/png,image/jpeg,image/gif" required><div class="form-text">A clear photo of the tool is required. Accepted file types: PNG, JPG, JPEG, or GIF.</div></div>
         <div class="col-md-6"><label class="form-label" for="available_from">Available from</label><input class="form-control" id="available_from" name="available_from" type="date" required></div>
         <div class="col-md-6"><label class="form-label" for="available_until">Available until</label><input class="form-control" id="available_until" name="available_until" type="date" required></div>
         <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control" id="description" name="description" rows="3" required></textarea></div>
         <div class="col-12"><button class="btn btn-primary">Add tool</button></div>
     </form></section>
-    <section class="workspace-panel"><h2>Your tools</h2>{% if tools %}<div class="data-list">{% for tool in tools %}<article><h3>{{ tool.title }}</h3><p>{{ tool.brand }} · {{ tool.tool_type }} · {{ tool.tool_condition }} · {{ tool.location }}</p><p>Available {{ tool.available_from }} to {{ tool.available_until }}</p><strong>${{ '%.2f'|format(tool.daily_rate) }} / day · {{ 'Available' if tool.is_available else 'Currently rented' }}</strong></article>{% endfor %}</div>{% else %}<p>No tools yet. Add your first tool above.</p>{% endif %}</section>
+    <section class="workspace-panel"><h2>Your tools</h2>{% if tools %}<div class="data-list">{% for tool in tools %}<article class="tool-card">{% if tool.toolphoto %}<img src="/{{ tool.toolphoto }}" alt="{{ tool.title }}">{% endif %}<div><h3>{{ tool.title }}</h3><p>{{ tool.brand }} · {{ tool.tool_type }} · {{ tool.tool_condition }} · {{ tool.suburb }}, {{ tool.city }}</p><p>Available {{ tool.available_from }} to {{ tool.available_until }}</p><strong>${{ '%.2f'|format(tool.daily_rate) }} / day · {{ 'Available' if tool.is_available else 'Currently rented' }}</strong><br><a class="btn btn-outline-primary btn-sm mt-3" href="/provider/listings/{{ tool.toolid }}/edit">Edit listing</a></div></article>{% endfor %}</div>{% else %}<p>No tools yet. Add your first tool above.</p>{% endif %}</section>
 </main>
 {% endblock %}

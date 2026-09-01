@@ -12,8 +12,10 @@ sys.tracebacklimit = 10
 
 # Configure the upload folder and allowed file extensions
 UPLOAD_FOLDER = 'profilephotos'
+TOOL_UPLOAD_FOLDER = 'toolphotos'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['TOOL_UPLOAD_FOLDER'] = TOOL_UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "Type in secret line of text"
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
@@ -55,8 +57,20 @@ def migrate_database():
         if statement.strip().upper().startswith('CREATE TABLE'):
             statement = statement.replace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', 1)
             conn.execute(statement)
+    tool_columns = {column[1] for column in conn.execute("PRAGMA table_info(tools)").fetchall()}
+    if 'toolphoto' not in tool_columns:
+        conn.execute("ALTER TABLE tools ADD COLUMN toolphoto TEXT NOT NULL DEFAULT ''")
+    if 'city' not in tool_columns:
+        conn.execute("ALTER TABLE tools ADD COLUMN city TEXT NOT NULL DEFAULT ''")
+    if 'suburb' not in tool_columns:
+        conn.execute("ALTER TABLE tools ADD COLUMN suburb TEXT NOT NULL DEFAULT ''")
+    if 'location' not in tool_columns:
+        # Kept for compatibility with earlier local database versions.
+        conn.execute("ALTER TABLE tools ADD COLUMN location TEXT NOT NULL DEFAULT ''")
     conn.commit()
     conn.close()
+
+    os.makedirs(TOOL_UPLOAD_FOLDER, exist_ok=True)
 
 init_database()
 migrate_database()
@@ -148,24 +162,81 @@ def provider_listings():
             daily_rate = float(request.form['daily_rate'])
         except ValueError:
             daily_rate = 0
-        location = request.form['location'].strip()
+        city = request.form['city'].strip()
+        suburb = request.form['suburb'].strip()
         tool_type = request.form['tool_type'].strip()
         brand = request.form['brand'].strip()
         tool_condition = request.form['tool_condition'].strip()
         available_from = request.form['available_from']
         available_until = request.form['available_until']
-        if not all([title, description, location, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or available_until < available_from:
+        tool_photo = request.files.get('toolphoto')
+        photo_is_valid = tool_photo and tool_photo.filename and allowed_file(tool_photo.filename)
+        if not all([title, description, city, suburb, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or available_until < available_from:
             flash('Complete every tool field, use a valid daily rate, and choose valid availability dates.')
+        elif not photo_is_valid:
+            flash('A tool photo is required. Please upload a PNG, JPG, JPEG, or GIF image.')
         else:
+            extension = secure_filename(tool_photo.filename).rsplit('.', 1)[1].lower()
+            photo_filename = f"tool_{session['userid']}_{uuid.uuid4().hex}.{extension}"
+            tool_photo_path = os.path.join(app.config['TOOL_UPLOAD_FOLDER'], photo_filename)
+            tool_photo.save(tool_photo_path)
             DATABASE.ModifyQuery(
-                """INSERT INTO tools (providerid, title, description, daily_rate, location, tool_type, brand, tool_condition, available_from, available_until)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (session['userid'], title, description, daily_rate, location, tool_type, brand, tool_condition, available_from, available_until)
+                """INSERT INTO tools (providerid, title, description, daily_rate, city, suburb, location, tool_type, brand, tool_condition, toolphoto, available_from, available_until)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                (session['userid'], title, description, daily_rate, city, suburb, f"{suburb}, {city}", tool_type, brand, tool_condition, tool_photo_path, available_from, available_until)
             )
             flash('Your tool has been added to the Toolly marketplace.')
             return redirect('/provider/listings')
     tools = DATABASE.ViewQuery("SELECT * FROM tools WHERE providerid = ? ORDER BY toolid DESC", (session['userid'],)) or []
     return render_template('provider_listings.html', tools=tools)
+
+@app.route('/provider/listings/<int:tool_id>/edit', methods=['GET', 'POST'])
+def provider_edit_listing(tool_id):
+    if not provider_only():
+        return redirect('./')
+    tool_result = DATABASE.ViewQuery("SELECT * FROM tools WHERE toolid = ? AND providerid = ?", (tool_id, session['userid']))
+    if not tool_result:
+        return redirect('/provider/listings')
+    tool = tool_result[0]
+
+    if request.method == 'POST':
+        title = request.form['title'].strip()
+        description = request.form['description'].strip()
+        city = request.form['city'].strip()
+        suburb = request.form['suburb'].strip()
+        tool_type = request.form['tool_type'].strip()
+        brand = request.form['brand'].strip()
+        tool_condition = request.form['tool_condition'].strip()
+        available_from = request.form['available_from']
+        available_until = request.form['available_until']
+        try:
+            daily_rate = float(request.form['daily_rate'])
+        except ValueError:
+            daily_rate = 0
+        if not all([title, description, city, suburb, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or available_until < available_from:
+            flash('Complete every tool field, use a valid daily rate, and choose valid availability dates.')
+            return render_template('provider_edit_listing.html', tool=tool)
+
+        tool_photo_path = tool['toolphoto']
+        tool_photo = request.files.get('toolphoto')
+        if tool_photo and tool_photo.filename:
+            if not allowed_file(tool_photo.filename):
+                flash('Tool photos must be PNG, JPG, JPEG, or GIF files.')
+                return render_template('provider_edit_listing.html', tool=tool)
+            extension = secure_filename(tool_photo.filename).rsplit('.', 1)[1].lower()
+            photo_filename = f"tool_{session['userid']}_{uuid.uuid4().hex}.{extension}"
+            tool_photo_path = os.path.join(app.config['TOOL_UPLOAD_FOLDER'], photo_filename)
+            tool_photo.save(tool_photo_path)
+
+        DATABASE.ModifyQuery(
+            """UPDATE tools SET title = ?, description = ?, daily_rate = ?, city = ?, suburb = ?, location = ?, tool_type = ?, brand = ?, tool_condition = ?, toolphoto = ?, available_from = ?, available_until = ?
+               WHERE toolid = ? AND providerid = ?""",
+            (title, description, daily_rate, city, suburb, f"{suburb}, {city}", tool_type, brand, tool_condition, tool_photo_path, available_from, available_until, tool_id, session['userid'])
+        )
+        flash('Your tool listing has been updated.')
+        return redirect('/provider/listings')
+
+    return render_template('provider_edit_listing.html', tool=tool)
 
 @app.route('/provider/active-rentals', methods=['GET', 'POST'])
 def provider_active_rentals():
@@ -240,12 +311,12 @@ def renter_browse():
             DATABASE.ModifyQuery("UPDATE tools SET is_available = 0 WHERE toolid = ?", (tool_id,))
             flash('Rental started. It is now in My Rentals.')
         return redirect('/renter/browse')
-    filters = {key: request.args.get(key, '').strip() for key in ('location', 'tool_type', 'brand', 'tool_condition', 'available_on')}
+    filters = {key: request.args.get(key, '').strip() for key in ('city', 'suburb', 'tool_type', 'brand', 'tool_condition', 'available_on')}
     max_price = request.args.get('max_price', '').strip()
     show_unavailable = request.args.get('show_unavailable') == '1'
     query = "SELECT tools.*, users.firstname || ' ' || users.lastname AS provider_name FROM tools JOIN users ON users.userid = tools.providerid WHERE 1 = 1"
     params = []
-    for field in ('location', 'tool_type', 'brand', 'tool_condition'):
+    for field in ('city', 'suburb', 'tool_type', 'brand', 'tool_condition'):
         if filters[field]:
             query += f" AND lower(tools.{field}) LIKE ?"
             params.append('%' + filters[field].lower() + '%')
@@ -510,6 +581,10 @@ def serve_file(filename):
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     else:
         abort(404) # If the file does not exist, return a 404 error
+
+@app.route('/toolphotos/<filename>')
+def serve_tool_photo(filename):
+    return send_from_directory(app.config['TOOL_UPLOAD_FOLDER'], filename)
 
 #main method called web server application
 if __name__ == '__main__':
