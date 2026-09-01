@@ -49,13 +49,22 @@ def init_database():
         conn.close()
 
 def migrate_database():
-    """Create feature tables for existing local databases as well."""
+    """Create feature tables for existing local databases as well.
+
+    Maintenance note: whenever database/createscript.txt changes, review this
+    function too. The schema file builds new databases; this function keeps an
+    existing database/test.db compatible without deleting its data.
+    """
     import sqlite3
     with open("database/createscript.txt", "r") as f:
         schema = f.read()
     conn = sqlite3.connect("database/test.db")
+    conn.execute("PRAGMA foreign_keys = ON")
     for statement in schema.split(';'):
-        if statement.strip().upper().startswith('CREATE TABLE'):
+        # Ignore SQL comments before testing a statement, so the maintenance
+        # note at the top of createscript.txt does not hide CREATE TABLE users.
+        statement = '\n'.join(line for line in statement.splitlines() if not line.lstrip().startswith('--')).strip()
+        if statement.upper().startswith('CREATE TABLE'):
             statement = statement.replace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', 1)
             conn.execute(statement)
     tool_columns = {column[1] for column in conn.execute("PRAGMA table_info(tools)").fetchall()}
@@ -79,6 +88,14 @@ def migrate_database():
     }.items():
         if column not in rental_columns:
             conn.execute(f"ALTER TABLE tool_rentals ADD COLUMN {column} {definition}")
+    # Existing databases cannot add NOT NULL or FOREIGN KEY constraints with
+    # ALTER TABLE. Apply the rules that SQLite can safely add in place.
+    conn.execute("UPDATE users SET permission = 'user' WHERE permission IS NULL")
+    conn.execute("UPDATE users SET lastaccess = datetime('now','localtime') WHERE lastaccess IS NULL")
+    try:
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_unique ON users(email)")
+    except sqlite3.IntegrityError:
+        app.logger.warning("Could not enforce unique users.email: duplicate emails exist in database/test.db.")
     conn.commit()
     conn.close()
 

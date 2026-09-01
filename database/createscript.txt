@@ -1,11 +1,15 @@
+-- SCHEMA MAINTENANCE NOTE:
+-- When this file changes, update app.py:migrate_database() in the same change.
+-- This file creates new databases; migrate_database() preserves existing data.
+
 CREATE TABLE users (
    userid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
    firstname TEXT NOT NULL,
    lastname TEXT NOT NULL,
    password TEXT NOT NULL,
-   email TEXT NOT NULL,
-   permission TEXT DEFAULT 'user' CHECK (permission in ('user','admin','User (Renter)','User (Tool Provider)')),
-   lastaccess DATE DEFAULT (datetime('now','localtime')),
+   email TEXT NOT NULL UNIQUE,
+   permission TEXT NOT NULL DEFAULT 'user' CHECK (permission in ('user','admin','User (Renter)','User (Tool Provider)')),
+   lastaccess DATE NOT NULL DEFAULT (datetime('now','localtime')),
    status TEXT NULL,
    profilephoto TEXT NULL,
    token TEXT NULL
@@ -26,7 +30,9 @@ CREATE TABLE ratings (
    renterid INTEGER NOT NULL,
    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
    comment TEXT NULL,
-   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid)
+   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid),
+   FOREIGN KEY(providerid) REFERENCES users(userid),
+   FOREIGN KEY(renterid) REFERENCES users(userid)
 );
 
 CREATE TABLE claims (
@@ -35,8 +41,9 @@ CREATE TABLE claims (
    providerid INTEGER NOT NULL,
    description TEXT NOT NULL,
    status TEXT NOT NULL DEFAULT 'open',
-   created_at DATE DEFAULT (datetime('now','localtime')),
-   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid)
+   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid),
+   FOREIGN KEY(providerid) REFERENCES users(userid)
 );
 
 CREATE TABLE tools (
@@ -55,7 +62,7 @@ CREATE TABLE tools (
    available_from DATE NOT NULL,
    available_until DATE NOT NULL,
    is_available INTEGER NOT NULL DEFAULT 1,
-   created_at DATE DEFAULT (datetime('now','localtime')),
+   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
    FOREIGN KEY(providerid) REFERENCES users(userid) ON DELETE CASCADE
 );
 
@@ -73,7 +80,7 @@ CREATE TABLE tool_rentals (
    security_deposit REAL NOT NULL,
    insurance_selected INTEGER NOT NULL DEFAULT 0,
    insurance_cost REAL NOT NULL DEFAULT 0,
-   created_at DATE DEFAULT (datetime('now','localtime')),
+   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
    completed_at DATE NULL,
    FOREIGN KEY(toolid) REFERENCES tools(toolid),
    FOREIGN KEY(renterid) REFERENCES users(userid),

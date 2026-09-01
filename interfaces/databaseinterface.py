@@ -19,6 +19,8 @@ class Database:
     # Returns a handle to the Database connection
     def connect(self):
         connection = sqlite3.connect(self.location)
+        # SQLite enforces foreign keys per connection, not globally per file.
+        connection.execute("PRAGMA foreign_keys = ON")
         connection.row_factory = sqlite3.Row #configures database queries to return a list of dictionaries (each row/record) [{"field1":value1,"field2":value2...},{etc},{} ]
         return connection
 
