@@ -4,10 +4,10 @@ CREATE TABLE users (
    lastname TEXT NOT NULL,
    password TEXT NOT NULL,
    email TEXT NOT NULL,
-   permission TEXT DEFAULT 'user' CHECK (permission in ('user','admin')),
+   permission TEXT DEFAULT 'user' CHECK (permission in ('user','admin','User (Renter)','User (Tool Provider)')),
    lastaccess DATE DEFAULT (datetime('now','localtime')),
    status TEXT NULL,
-   profilepicture TEXT NULL,
+   profilephoto TEXT NULL,
    token TEXT NULL
 );
 

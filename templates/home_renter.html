@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="container mt-5">
+        <h2>Welcome Renter, {{session['name']}}!</h2>
+        <p>Ready to rent the tools you need?</p>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="feature-box">
+                    <h3>Browse Tools</h3>
+                    <p>Explore available tools in your area and find exactly what you need for your project.</p>
+                    <a href="#" class="btn btn-primary">Start Browsing</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="feature-box">
+                    <h3>My Rentals</h3>
+                    <p>View your active rentals, track return dates, and manage your borrowed tools.</p>
+                    <a href="#" class="btn btn-primary">View Rentals</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="feature-box">
+                    <h3>My Wishlist</h3>
+                    <p>Save tools you want to rent later and get notified when they become available.</p>
+                    <a href="#" class="btn btn-primary">View Wishlist</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="feature-box">
+                    <h3>My Profile</h3>
+                    <p>Update your profile, view your rental history, and manage your preferences.</p>
+                    <a href="#" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+
+        {% include "profilephoto.html" %}
+    </div>
+{% endblock %}

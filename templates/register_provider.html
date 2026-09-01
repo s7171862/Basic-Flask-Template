@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <h2>Register as a Tool Provider</h2>
+
+    {{message}}
+
+    <form action="/register/provider" enctype="multipart/form-data" method="POST">
+
+        <label for="fname">First name:</label><br>
+            <input type="text" id="fname" name="fname" value="" required><br>
+            
+        <label for="lname">Last name:</label><br>
+            <input type="text" id="lname" name="lname" value="" required><br>
+
+        <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" value="" required><br>
+
+        <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" value="" required><br>
+
+        <label for="email">Password Confirm:</label><br>
+            <input type="password" id="passwordconfirm" name="passwordconfirm" value="" required><br>
+        <br>
+
+        <label for="profilephoto">Profile Photo:</label><br>
+            <input type="file" name="file">
+        <br>
+
+        <input type="submit" value="Submit">
+    </form> 
+
+{% endblock %}

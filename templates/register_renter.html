@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
 
-    <h2>Register</h2>
+    <h2>Register as a Renter</h2>
 
     {{message}}
 
-    <form action="/register" enctype="multipart/form-data" method="POST">
+    <form action="/register/renter" enctype="multipart/form-data" method="POST">
 
         <label for="fname">First name:</label><br>
             <input type="text" id="fname" name="fname" value="" required><br>
