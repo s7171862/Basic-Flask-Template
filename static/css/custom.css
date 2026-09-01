@@ -3,6 +3,77 @@
     overflow-x: hidden;
 }
 
+.custom-navbar {
+    background: linear-gradient(90deg, #6f462f 0%, #8a5b3d 18%, #68462f 38%, #9a6a47 52%, #714d38 72%, #5f3c2b 100%);
+    box-shadow: inset 0 0 0 1px rgba(58, 35, 24, 0.75), inset 0 10px 20px rgba(255, 245, 220, 0.12), 0 4px 10px rgba(41, 26, 18, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-navbar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.04) 0,
+        rgba(255,255,255,0.04) 2px,
+        rgba(87,50,33,0.06) 2px,
+        rgba(87,50,33,0.06) 6px,
+        rgba(255,255,255,0.02) 6px,
+        rgba(255,255,255,0.02) 10px
+    );
+    pointer-events: none;
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+    color: #f9f0e3 !important;
+    text-shadow: 0 1px 1px rgba(51, 32, 22, 0.7);
+    position: relative;
+    z-index: 1;
+}
+
+.custom-navbar .navbar-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .nav-link:focus {
+    color: #f7d6a5 !important;
+}
+
+.custom-navbar .nav-link {
+    font-size: 1.05rem;
+}
+
+.login-page {
+    max-width: 420px;
+    margin: 60px auto 0;
+    padding: 25px 20px;
+    border-radius: 10px;
+    background: #f8f8f8;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.login-form {
+    width: 100%;
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    width: 100%;
+    max-width: 100%;
+    padding: 8px 10px;
+}
+
 .profilephoto
 {
     width:200px;
