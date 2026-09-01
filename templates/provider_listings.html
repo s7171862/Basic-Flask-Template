@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
 <main class="dashboard-page">
-    <section class="dashboard-hero"><span class="dashboard-eyebrow">Provider workspace</span><h1>My Listings</h1><p>Add complete tool details so renters can search your listing in Toolly.</p></section>
-    <section class="workspace-panel"><div class="workspace-panel-heading"><h2>Add a tool</h2><a href="/home" class="btn btn-outline-primary btn-sm">Back to dashboard</a></div><form method="POST" enctype="multipart/form-data" class="row g-3">
+    <section class="dashboard-hero"><span class="dashboard-eyebrow">Provider workspace</span><h1>My Listings</h1><p>Add complete tool details so renters can search your listing in Toolly.</p><a href="/home" class="btn btn-outline-primary btn-sm mt-3">Back to dashboard</a></section>
+    <section class="workspace-panel"><h2>Add a tool</h2><form method="POST" enctype="multipart/form-data" class="row g-3">
         <div class="col-md-6"><label class="form-label" for="title">Tool name</label><input class="form-control" id="title" name="title" required></div>
         <div class="col-md-3"><label class="form-label" for="daily_rate">Daily rate ($)</label><input class="form-control" id="daily_rate" name="daily_rate" type="number" min="0.01" step="0.01" required></div>
         <div class="col-md-3"><label class="form-label" for="city">Queensland city</label><select class="form-select" id="city" name="city" data-location-city required><option value="">Choose a city</option></select></div>
@@ -16,6 +16,6 @@
         <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control" id="description" name="description" rows="3" required></textarea></div>
         <div class="col-12"><button class="btn btn-primary">Add tool</button></div>
     </form></section>
-    <section class="workspace-panel"><h2>Your tools</h2>{% if tools %}<div class="data-list">{% for tool in tools %}<article class="tool-card">{% if tool.toolphoto %}<img src="/{{ tool.toolphoto }}" alt="{{ tool.title }}">{% endif %}<div><h3>{{ tool.title }}</h3><p>{{ tool.brand }} · {{ tool.tool_type }} · {{ tool.tool_condition }} · {{ tool.suburb }}, {{ tool.city }}</p><p>Available {{ tool.available_from }} to {{ tool.available_until }}</p><strong>${{ '%.2f'|format(tool.daily_rate) }} / day · {{ 'Available' if tool.is_available else 'Currently rented' }}</strong><br><a class="btn btn-outline-primary btn-sm mt-3" href="/provider/listings/{{ tool.toolid }}/edit">Edit listing</a></div></article>{% endfor %}</div>{% else %}<p>No tools yet. Add your first tool above.</p>{% endif %}</section>
+    <section class="workspace-panel"><h2>Your tools</h2>{% if tools %}<div class="data-list">{% for tool in tools %}<article class="tool-card">{% if tool.toolphoto %}<img src="/{{ tool.toolphoto }}" alt="{{ tool.title }}">{% endif %}<div><h3>{{ tool.title }}</h3><p>{{ tool.brand }} · {{ tool.tool_type }} · {{ tool.tool_condition }} · {{ tool.suburb }}, {{ tool.city }}</p><p>Available {{ tool.available_from }} to {{ tool.available_until }}</p><strong>${{ '%.2f'|format(tool.daily_rate) }} / day · {{ 'Available' if tool.is_available else 'Currently rented' }}</strong><div class="inline-actions mt-3"><a class="btn btn-outline-primary btn-sm" href="/provider/listings/{{ tool.toolid }}/edit">Edit listing</a><form method="POST" action="/provider/listings/{{ tool.toolid }}/remove"><button class="btn btn-outline-danger btn-sm">Take down listing</button></form></div></div></article>{% endfor %}</div>{% else %}<p>No tools yet. Add your first tool above.</p>{% endif %}</section>
 </main>
 {% endblock %}

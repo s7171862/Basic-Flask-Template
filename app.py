@@ -238,6 +238,20 @@ def provider_edit_listing(tool_id):
 
     return render_template('provider_edit_listing.html', tool=tool)
 
+@app.route('/provider/listings/<int:tool_id>/remove', methods=['POST'])
+def provider_remove_listing(tool_id):
+    if not provider_only():
+        return redirect('./')
+    active_rental = DATABASE.ViewQuery(
+        "SELECT rentalid FROM tool_rentals WHERE toolid = ? AND status = 'active'", (tool_id,)
+    )
+    if active_rental:
+        flash('This listing cannot be taken down while it has an active rental.')
+    else:
+        DATABASE.ModifyQuery("DELETE FROM tools WHERE toolid = ? AND providerid = ?", (tool_id, session['userid']))
+        flash('Your listing has been taken down.')
+    return redirect('/provider/listings')
+
 @app.route('/provider/active-rentals', methods=['GET', 'POST'])
 def provider_active_rentals():
     if not provider_only():
@@ -335,10 +349,21 @@ def renter_browse():
     tools = DATABASE.ViewQuery(query, tuple(params)) or []
     return render_template('renter_browse.html', tools=tools, filters=filters, max_price=max_price, show_unavailable=show_unavailable)
 
-@app.route('/renter/rentals')
+@app.route('/renter/rentals', methods=['GET', 'POST'])
 def renter_rentals():
     if not renter_only():
         return redirect('./')
+    if request.method == 'POST':
+        rental_id = request.form.get('rentalid', type=int)
+        rental = DATABASE.ViewQuery(
+            "SELECT toolid FROM tool_rentals WHERE rentalid = ? AND renterid = ? AND status = 'active'",
+            (rental_id, session['userid'])
+        )
+        if rental:
+            DATABASE.ModifyQuery("DELETE FROM tool_rentals WHERE rentalid = ? AND renterid = ?", (rental_id, session['userid']))
+            DATABASE.ModifyQuery("UPDATE tools SET is_available = 1 WHERE toolid = ?", (rental[0]['toolid'],))
+            flash('Your rental has been cancelled and the tool is available again.')
+        return redirect('/renter/rentals')
     rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS provider_name
                                   FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid JOIN users ON users.userid = tool_rentals.providerid
                                   WHERE tool_rentals.renterid = ? AND tool_rentals.status = 'active' ORDER BY tool_rentals.rentalid DESC""", (session['userid'],)) or []
