@@ -1,4 +1,40 @@
 {% extends "layout.html" %}
 {% block content %}
-<main class="dashboard-page"><section class="dashboard-hero"><span class="dashboard-eyebrow">Your rental records</span><h1>{{ title }}</h1><p>Your rental history is saved in the Toolly database.</p><a href="/home" class="btn btn-outline-primary btn-sm mt-3">Back to dashboard</a></section><section class="workspace-panel">{% if rentals %}<div class="data-list">{% for rental in rentals %}<article><h3>{{ rental.title }}</h3><p>Provider: {{ rental.provider_name }} · ${{ '%.2f'|format(rental.total) }}</p>{% if title == 'My Rentals' %}<div class="inline-actions"><form method="POST" action="/messages/start/rental/{{ rental.rentalid }}"><button class="btn btn-outline-primary btn-sm">Message provider</button></form><form method="POST"><input type="hidden" name="rentalid" value="{{ rental.rentalid }}"><button class="btn btn-outline-danger btn-sm">Cancel rental</button></form></div>{% endif %}</article>{% endfor %}</div>{% else %}<p>No rentals to show yet.</p>{% endif %}</section></main>
+<main class="dashboard-page">
+    <section class="dashboard-hero">
+        <span class="dashboard-eyebrow">Your rental records</span>
+        <h1>{{ title }}</h1>
+        <p>Your rental history is saved in the Toolly database.</p>
+        <a href="/home" class="btn btn-outline-primary btn-sm mt-3">Back to dashboard</a>
+    </section>
+    <section class="workspace-panel">
+        {% if rentals %}
+            <div class="data-list">
+                {% for rental in rentals %}
+                    <article>
+                        <h3>{{ rental.title }}</h3>
+                        <p>Provider: {{ rental.provider_name }} · ${{ '%.2f'|format(rental.total) }}</p>
+                        {% if title == 'My Rentals' %}
+                            <div class="inline-actions">
+                                <form method="POST" action="/messages/start/rental/{{ rental.rentalid }}"><button class="btn btn-outline-primary btn-sm">Message provider</button></form>
+                                <form method="POST"><input type="hidden" name="rentalid" value="{{ rental.rentalid }}"><button class="btn btn-outline-danger btn-sm">Cancel rental</button></form>
+                            </div>
+                        {% else %}
+                            <section class="rental-review">
+                                <h4>Rate this rental</h4>
+                                {% if rental.review_rating %}<p class="review-saved">Your saved rating: <strong>{{ rental.review_rating }}/5</strong></p>{% endif %}
+                                <form method="POST" class="row g-2">
+                                    <input type="hidden" name="rentalid" value="{{ rental.rentalid }}">
+                                    <div class="col-sm-4"><label class="visually-hidden" for="rating-{{ rental.rentalid }}">Rating</label><select class="form-select" id="rating-{{ rental.rentalid }}" name="rating" required><option value="">Choose stars</option>{% for value in range(1, 6) %}<option value="{{ value }}" {% if rental.review_rating == value %}selected{% endif %}>{{ value }} star{{ '' if value == 1 else 's' }}</option>{% endfor %}</select></div>
+                                    <div class="col-sm-8"><label class="visually-hidden" for="comment-{{ rental.rentalid }}">Review comment</label><input class="form-control" id="comment-{{ rental.rentalid }}" name="comment" maxlength="500" value="{{ rental.review_comment or '' }}" placeholder="Optional comment about the tool or provider"></div>
+                                    <div class="col-12"><button class="btn btn-primary btn-sm">{{ 'Update review' if rental.review_rating else 'Save review' }}</button></div>
+                                </form>
+                            </section>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}<p>No rentals to show yet.</p>{% endif %}
+    </section>
+</main>
 {% endblock %}

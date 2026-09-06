@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="dashboard-page">
+    <section class="dashboard-hero"><span class="dashboard-eyebrow">Provider workspace</span><h1>My Claims</h1><p>Review the status of submitted claims and any simulated charge decision.</p><a href="/home" class="btn btn-outline-primary btn-sm mt-3">Back to dashboard</a></section>
+    <section class="workspace-panel">
+        {% if claims %}<div class="provider-claims-list">{% for claim in claims %}<article class="provider-claim-card">
+            {% if claim.evidence_photo %}<img src="/{{ claim.evidence_photo }}" alt="Supporting photo for {{ claim.title }} claim">{% endif %}
+            <div><span class="claim-status claim-status-{{ claim.status }}">{{ claim.status|capitalize }}</span><h2>{{ claim.title }}</h2><p>Renter: {{ claim.renter_name }}</p><p>{{ claim.description }}</p><dl><div><dt>Submitted</dt><dd>{{ claim.created_at }}</dd></div><div><dt>Simulated charge</dt><dd>${{ '%.2f'|format(claim.claim_charge) }}</dd></div>{% if claim.reviewed_at %}<div><dt>Reviewed</dt><dd>{{ claim.reviewed_at }}</dd></div>{% endif %}</dl>{% if claim.status == 'accepted' %}<p class="claim-decision accepted">Accepted. Toolly sent the renter an automatic message with the simulated charge.</p>{% elif claim.status == 'denied' %}<p class="claim-decision denied">Denied. No simulated charge was applied.</p>{% else %}<p class="claim-decision">Your claim is waiting for an administrator decision.</p>{% endif %}</div>
+        </article>{% endfor %}</div>{% else %}<div class="workspace-empty-state"><h2>No claims yet</h2><p>Claims you submit from a completed rental will appear here.</p><a href="/provider/past-rentals" class="btn btn-primary">View past rentals</a></div>{% endif %}
+    </section>
+</main>
+{% endblock %}

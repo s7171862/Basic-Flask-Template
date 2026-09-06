@@ -37,7 +37,11 @@
 
     <div class="row g-4">
         <div class="col-lg-7"><section class="workspace-panel admin-table-panel h-100"><h2>Active rentals</h2>{% if active_rentals %}<div class="table-responsive"><table class="table admin-table"><thead><tr><th>Tool</th><th>Renter</th><th>Provider</th><th>Dates</th><th>Total</th></tr></thead><tbody>{% for rental in active_rentals %}<tr><td>{{ rental.title }} <small>#{{ rental.rentalid }}</small></td><td>{{ rental.renter_name }}</td><td>{{ rental.provider_name }}</td><td>{{ rental.start_date }} to {{ rental.end_date }}</td><td>${{ '%.2f'|format(rental.total) }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p>No active rentals right now.</p>{% endif %}</section></div>
+<<<<<<< ours
         <div class="col-lg-5"><section class="workspace-panel admin-table-panel h-100"><h2>Open claims</h2>{% if open_claims %}<div class="admin-claim-list">{% for claim in open_claims %}<article><strong>{{ claim.title }}</strong><span>Provider: {{ claim.provider_name }}</span><p>{{ claim.description }}</p><small>Claim #{{ claim.claimid }} · {{ claim.created_at }}</small></article>{% endfor %}</div>{% else %}<p>No open claims right now.</p>{% endif %}</section></div>
+=======
+        <div class="col-lg-5"><section class="workspace-panel admin-table-panel h-100"><h2>Open claims</h2>{% if open_claims %}<div class="admin-claim-list">{% for claim in open_claims %}<article><strong>{{ claim.title }}</strong><span>Provider: {{ claim.provider_name }}</span><p>{{ claim.description }}</p><form method="POST" class="claim-status-form"><input type="hidden" name="action" value="update_claim"><input type="hidden" name="claimid" value="{{ claim.claimid }}"><select class="form-select form-select-sm" name="claim_status" aria-label="Claim {{ claim.claimid }} status">{% for status in ['open', 'reviewing', 'resolved', 'rejected'] %}<option value="{{ status }}" {% if claim.status == status %}selected{% endif %}>{{ status|capitalize }}</option>{% endfor %}</select><button class="btn btn-outline-primary btn-sm">Update</button></form><small>Claim #{{ claim.claimid }} · {{ claim.created_at }}</small></article>{% endfor %}</div>{% else %}<p>No open claims right now.</p>{% endif %}</section></div>
+>>>>>>> theirs
     </div>
 </main>
 {% endblock %}

@@ -15,9 +15,11 @@ sys.tracebacklimit = 10
 # Configure the upload folder and allowed file extensions
 UPLOAD_FOLDER = 'profilephotos'
 TOOL_UPLOAD_FOLDER = 'toolphotos'
+CLAIM_UPLOAD_FOLDER = 'claimphotos'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['TOOL_UPLOAD_FOLDER'] = TOOL_UPLOAD_FOLDER
+app.config['CLAIM_UPLOAD_FOLDER'] = CLAIM_UPLOAD_FOLDER
 # Set TOOLLY_SECRET_KEY in the environment before deploying.  The fallback
 # keeps this school-project copy easy to run locally.
 app.config['SECRET_KEY'] = os.environ.get('TOOLLY_SECRET_KEY', 'toolly-local-development-key')
@@ -181,6 +183,15 @@ def migrate_database():
     }.items():
         if column not in rental_columns:
             conn.execute(f"ALTER TABLE tool_rentals ADD COLUMN {column} {definition}")
+    claim_columns = {column[1] for column in conn.execute("PRAGMA table_info(claims)").fetchall()}
+    for column, definition in {
+        'evidence_photo': "TEXT NOT NULL DEFAULT ''",
+        'claim_charge': 'REAL NOT NULL DEFAULT 0',
+        'reviewed_at': 'DATE NULL',
+        'reviewed_by': 'INTEGER NULL'
+    }.items():
+        if column not in claim_columns:
+            conn.execute(f"ALTER TABLE claims ADD COLUMN {column} {definition}")
     message_columns = {column[1] for column in conn.execute("PRAGMA table_info(messages)").fetchall()}
     for column, definition in {
         'conversationid': 'INTEGER',
@@ -206,6 +217,7 @@ def migrate_database():
 
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     os.makedirs(TOOL_UPLOAD_FOLDER, exist_ok=True)
+    os.makedirs(CLAIM_UPLOAD_FOLDER, exist_ok=True)
 
 init_database()
 migrate_database()
@@ -247,12 +259,59 @@ def admin():
         return redirect("./")
 
     if request.method == "POST":
-        selected_users = [userid for userid in request.form.getlist("selectedusers")
-                          if userid.isdigit() and int(userid) not in (1, session['userid'])]
-        if selected_users:
-            placeholders = ', '.join('?' for _ in selected_users)
-            DATABASE.ModifyQuery(f"DELETE FROM users WHERE userid IN ({placeholders})", tuple(selected_users))
-            flash(f"Deleted {len(selected_users)} selected account(s).")
+        if request.form.get('action') == 'update_claim':
+            claim_id = request.form.get('claimid', type=int)
+            claim_status = request.form.get('claim_status', '')
+            allowed_claim_statuses = {'reviewing', 'accepted', 'denied'}
+            claim = DATABASE.ViewQuery(
+                """SELECT claims.claimid, claims.status, tool_rentals.toolid, tool_rentals.renterid,
+                    tool_rentals.providerid, tool_rentals.insurance_selected, tool_rentals.security_deposit,
+                    tools.title FROM claims JOIN tool_rentals ON tool_rentals.rentalid = claims.rentalid
+                    JOIN tools ON tools.toolid = tool_rentals.toolid WHERE claims.claimid = ?""",
+                (claim_id,)
+            )
+            if not claim:
+                flash('That claim could not be found.')
+            elif claim_status not in allowed_claim_statuses:
+                flash('Choose a valid claim status.')
+            elif claim_status == 'accepted' and claim[0]['status'] == 'accepted':
+                flash('This claim was already accepted; no duplicate message was sent.')
+            elif claim_status == 'accepted':
+                claim_charge = 0 if claim[0]['insurance_selected'] else float(claim[0]['security_deposit'])
+                conversation = open_conversation(claim[0]['toolid'], claim[0]['renterid'], claim[0]['providerid'])
+                if not conversation:
+                    flash('The claim could not be accepted because the renter conversation could not be opened.')
+                else:
+                    if claim[0]['insurance_selected']:
+                        charge_text = 'Renter insurance was selected, so there is no simulated claim charge.'
+                    else:
+                        charge_text = f"Renter insurance was not selected, so a simulated charge of ${claim_charge:.2f} has been applied against the security deposit."
+                    notice = f"Toolly claim decision: the provider claim for {claim[0]['title']} was accepted. {charge_text}"
+                    saved = DATABASE.ModifyMany([
+                        ("UPDATE claims SET status = 'accepted', claim_charge = ?, reviewed_at = datetime('now','localtime'), reviewed_by = ? WHERE claimid = ?", (claim_charge, session['userid'], claim_id)),
+                        ("INSERT INTO messages (conversationid, author, authorid, messagetext, created_at) VALUES (?, ?, ?, ?, datetime('now','localtime'))", (conversation[0]['conversationid'], claim[0]['providerid'], claim[0]['providerid'], notice)),
+                        ("UPDATE conversations SET last_message_at = datetime('now','localtime') WHERE conversationid = ?", (conversation[0]['conversationid'],))
+                    ])
+                    flash('Claim accepted and an automatic notice was sent to the renter.' if saved else 'The claim could not be accepted.')
+            elif claim_status == 'denied':
+                saved = DATABASE.ModifyQuery(
+                    "UPDATE claims SET status = 'denied', claim_charge = 0, reviewed_at = datetime('now','localtime'), reviewed_by = ? WHERE claimid = ?",
+                    (session['userid'], claim_id)
+                )
+                flash('Claim denied.' if saved else 'The claim could not be updated.')
+            else:
+                saved = DATABASE.ModifyQuery(
+                    "UPDATE claims SET status = 'reviewing', reviewed_at = datetime('now','localtime'), reviewed_by = ? WHERE claimid = ?",
+                    (session['userid'], claim_id)
+                )
+                flash('Claim marked as reviewing.' if saved else 'The claim could not be updated.')
+        else:
+            selected_users = [userid for userid in request.form.getlist("selectedusers")
+                              if userid.isdigit() and int(userid) not in (1, session['userid'])]
+            if selected_users:
+                placeholders = ', '.join('?' for _ in selected_users)
+                DATABASE.ModifyQuery(f"DELETE FROM users WHERE userid IN ({placeholders})", tuple(selected_users))
+                flash(f"Deleted {len(selected_users)} selected account(s).")
         return redirect("./admin")
 
     summary = DATABASE.ViewQuery("""SELECT
@@ -263,7 +322,7 @@ def admin():
         (SELECT COUNT(*) FROM tools WHERE is_available = 1) AS available_tools_count,
         (SELECT COUNT(*) FROM tool_rentals WHERE status = 'active') AS active_rentals_count,
         (SELECT COUNT(*) FROM tool_rentals WHERE status = 'completed') AS completed_rentals_count,
-        (SELECT COUNT(*) FROM claims WHERE status = 'open') AS open_claims_count,
+        (SELECT COUNT(*) FROM claims WHERE status IN ('open', 'reviewing')) AS open_claims_count,
         (SELECT COUNT(*) FROM conversations) AS conversations_count""")[0]
     results = DATABASE.ViewQuery("""SELECT users.userid, users.firstname, users.lastname, users.email,
         users.permission, users.status, users.profilephoto, users.lastaccess,
@@ -279,12 +338,15 @@ def admin():
         JOIN users AS renter ON renter.userid = tool_rentals.renterid
         JOIN users AS provider ON provider.userid = tool_rentals.providerid
         WHERE tool_rentals.status = 'active' ORDER BY tool_rentals.created_at DESC LIMIT 8""") or []
-    open_claims = DATABASE.ViewQuery("""SELECT claims.claimid, claims.description, claims.created_at, claims.status,
-        tools.title, users.firstname || ' ' || users.lastname AS provider_name
+    open_claims = DATABASE.ViewQuery("""SELECT claims.claimid, claims.description, claims.evidence_photo, claims.claim_charge,
+        claims.created_at, claims.status, tool_rentals.insurance_selected, tool_rentals.security_deposit,
+        tools.title, users.firstname || ' ' || users.lastname AS provider_name,
+        renter.firstname || ' ' || renter.lastname AS renter_name
         FROM claims JOIN tool_rentals ON tool_rentals.rentalid = claims.rentalid
         JOIN tools ON tools.toolid = tool_rentals.toolid
         JOIN users ON users.userid = claims.providerid
-        WHERE claims.status = 'open' ORDER BY claims.created_at DESC LIMIT 8""") or []
+        JOIN users AS renter ON renter.userid = tool_rentals.renterid
+        WHERE claims.status IN ('open', 'reviewing') ORDER BY claims.created_at DESC LIMIT 8""") or []
     app.logger.info("Admin")
     return render_template("admin.html", summary=summary, results=results, active_rentals=active_rentals, open_claims=open_claims)
 
@@ -475,15 +537,49 @@ def provider_past_rentals():
                 flash('Customer rating saved.')
         elif request.form.get('action') == 'claim':
             description = request.form.get('description', '').strip()
-            if description:
-                DATABASE.ModifyQuery("INSERT INTO claims (rentalid, providerid, description) VALUES (?, ?, ?)", (rental_id, session['userid'], description))
-                flash('Your claim has been submitted.')
+            evidence_photo = save_uploaded_image(request.files.get('claim_photo'), CLAIM_UPLOAD_FOLDER, f"claim_{session['userid']}")
+            existing_claim = DATABASE.ViewQuery(
+                "SELECT claimid FROM claims WHERE rentalid = ? AND status IN ('open', 'reviewing')", (rental_id,)
+            )
+            if not description:
+                flash('Describe the issue before submitting a claim.')
+            elif not evidence_photo:
+                flash('A supporting claim photo is required. Upload a PNG, JPG, JPEG, or GIF image.')
+            elif existing_claim:
+                os.remove(evidence_photo)
+                flash('This rental already has an active claim.')
+            else:
+                simulated_charge = 0 if rental[0]['insurance_selected'] else float(rental[0]['security_deposit'])
+                claim_saved = DATABASE.ModifyQuery(
+                    """INSERT INTO claims (rentalid, providerid, description, evidence_photo, claim_charge)
+                       VALUES (?, ?, ?, ?, ?)""",
+                    (rental_id, session['userid'], description, evidence_photo, simulated_charge)
+                )
+                if not claim_saved:
+                    os.remove(evidence_photo)
+                flash('Your claim and supporting photo have been submitted.' if claim_saved else 'Your claim could not be submitted.')
         return redirect('/provider/past-rentals')
     rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS renter_name
                                   FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid
                                   JOIN users ON users.userid = tool_rentals.renterid
                                   WHERE tool_rentals.providerid = ? AND tool_rentals.status = 'completed' ORDER BY tool_rentals.completed_at DESC""", (session['userid'],)) or []
     return render_template('provider_past_rentals.html', rentals=rentals)
+
+
+@app.route('/provider/claims')
+def provider_claims():
+    """Show a provider the decision and evidence for each of their claims."""
+    if not provider_only():
+        return redirect('./')
+    claims = DATABASE.ViewQuery(
+        """SELECT claims.*, tools.title, users.firstname || ' ' || users.lastname AS renter_name
+           FROM claims JOIN tool_rentals ON tool_rentals.rentalid = claims.rentalid
+           JOIN tools ON tools.toolid = tool_rentals.toolid
+           JOIN users ON users.userid = tool_rentals.renterid
+           WHERE claims.providerid = ? ORDER BY claims.created_at DESC""",
+        (session['userid'],)
+    ) or []
+    return render_template('provider_claims.html', claims=claims)
 
 def renter_only():
     return 'userid' in session and session.get('permission') == 'User (Renter)'
@@ -718,13 +814,39 @@ def renter_wishlist():
                                 WHERE tool_wishlists.renterid = ? ORDER BY tool_wishlists.wishlistid DESC""", (session['userid'],)) or []
     return render_template('renter_wishlist.html', tools=tools)
 
-@app.route('/renter/past-rentals')
+@app.route('/renter/past-rentals', methods=['GET', 'POST'])
 def renter_past_rentals():
     if not renter_only():
         return redirect('./')
-    rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS provider_name
-                                  FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid JOIN users ON users.userid = tool_rentals.providerid
-                                  WHERE tool_rentals.renterid = ? AND tool_rentals.status = 'completed' ORDER BY tool_rentals.completed_at DESC""", (session['userid'],)) or []
+    if request.method == 'POST':
+        rental_id = request.form.get('rentalid', type=int)
+        rating = request.form.get('rating', type=int)
+        comment = request.form.get('comment', '').strip()[:500]
+        rental = DATABASE.ViewQuery(
+            """SELECT rentalid, toolid, providerid FROM tool_rentals
+               WHERE rentalid = ? AND renterid = ? AND status = 'completed'""",
+            (rental_id, session['userid'])
+        )
+        if not rental:
+            flash('You can only review your own completed rentals.')
+        elif not rating or not 1 <= rating <= 5:
+            flash('Choose a rating from 1 to 5 stars.')
+        else:
+            review_saved = DATABASE.ModifyQuery(
+                """INSERT OR REPLACE INTO renter_reviews (rentalid, toolid, providerid, renterid, rating, comment, created_at)
+                   VALUES (?, ?, ?, ?, ?, ?, datetime('now','localtime'))""",
+                (rental_id, rental[0]['toolid'], rental[0]['providerid'], session['userid'], rating, comment)
+            )
+            flash('Your review has been saved.' if review_saved else 'Your review could not be saved. Please try again.')
+        return redirect('/renter/past-rentals')
+
+    rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS provider_name,
+                                  renter_reviews.rating AS review_rating, renter_reviews.comment AS review_comment
+                                  FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid
+                                  JOIN users ON users.userid = tool_rentals.providerid
+                                  LEFT JOIN renter_reviews ON renter_reviews.rentalid = tool_rentals.rentalid
+                                  WHERE tool_rentals.renterid = ? AND tool_rentals.status = 'completed'
+                                  ORDER BY tool_rentals.completed_at DESC""", (session['userid'],)) or []
     return render_template('renter_rentals.html', rentals=rentals, title='Past Rentals')
 
 @app.route('/profile', methods=['GET', 'POST'])
@@ -865,6 +987,10 @@ def serve_file(filename):
 @app.route('/toolphotos/<filename>')
 def serve_tool_photo(filename):
     return send_from_directory(app.config['TOOL_UPLOAD_FOLDER'], filename)
+
+@app.route('/claimphotos/<filename>')
+def serve_claim_photo(filename):
+    return send_from_directory(app.config['CLAIM_UPLOAD_FOLDER'], filename)
 
 #main method called web server application
 if __name__ == '__main__':

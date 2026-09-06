@@ -32,10 +32,15 @@ CREATE TABLE claims (
    rentalid INTEGER NOT NULL,
    providerid INTEGER NOT NULL,
    description TEXT NOT NULL,
+   evidence_photo TEXT NOT NULL,
+   claim_charge REAL NOT NULL DEFAULT 0 CHECK (claim_charge >= 0),
    status TEXT NOT NULL DEFAULT 'open',
    created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+   reviewed_at DATE NULL,
+   reviewed_by INTEGER NULL,
    FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid),
-   FOREIGN KEY(providerid) REFERENCES users(userid)
+   FOREIGN KEY(providerid) REFERENCES users(userid),
+   FOREIGN KEY(reviewed_by) REFERENCES users(userid)
 );
 
 CREATE TABLE tools (
@@ -90,6 +95,23 @@ CREATE TABLE tool_wishlists (
    FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE
 );
 
+-- Renter feedback is separate from provider-to-renter ratings so both sides
+-- can leave one review for the same completed rental.
+CREATE TABLE renter_reviews (
+   reviewid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   rentalid INTEGER NOT NULL UNIQUE,
+   toolid INTEGER NOT NULL,
+   providerid INTEGER NOT NULL,
+   renterid INTEGER NOT NULL,
+   rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+   comment TEXT NULL,
+   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid) ON DELETE CASCADE,
+   FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE,
+   FOREIGN KEY(providerid) REFERENCES users(userid) ON DELETE CASCADE,
+   FOREIGN KEY(renterid) REFERENCES users(userid) ON DELETE CASCADE
+);
+
 CREATE TABLE conversations (
    conversationid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
    toolid INTEGER NOT NULL,
@@ -126,6 +148,9 @@ CREATE INDEX idx_tool_rentals_tool_status ON tool_rentals(toolid, status);
 CREATE INDEX idx_tool_wishlists_renter ON tool_wishlists(renterid, wishlistid);
 CREATE INDEX idx_ratings_provider ON ratings(providerid, rentalid);
 CREATE INDEX idx_claims_provider_status ON claims(providerid, status);
+CREATE INDEX idx_claims_rental_status ON claims(rentalid, status);
+CREATE INDEX idx_renter_reviews_provider ON renter_reviews(providerid, rating);
+CREATE INDEX idx_renter_reviews_tool ON renter_reviews(toolid, rating);
 CREATE INDEX idx_conversations_renter ON conversations(renterid, last_message_at);
 CREATE INDEX idx_conversations_provider ON conversations(providerid, last_message_at);
 CREATE INDEX idx_messages_conversation ON messages(conversationid, messageid);

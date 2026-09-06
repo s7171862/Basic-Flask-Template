@@ -513,6 +513,12 @@
 .admin-claim-list span, .admin-claim-list small { color: #715831; font-size: 0.82rem; }
 .admin-claim-list p { margin: 8px 0; color: #4f3a20; overflow-wrap: anywhere; }
 .admin-edit-card { max-width: 760px; }
+.claim-status-form { display: flex; gap: 8px; align-items: center; margin: 10px 0; }
+.claim-status-form .form-select { width: auto; min-width: 118px; }
+
+.rental-review { max-width: 700px; margin-top: 18px; padding: 16px; border: 1px solid #ead58e; border-radius: 13px; background: #fff9e5; }
+.rental-review h4 { margin: 0 0 10px; color: #4d3510; font-size: 1rem; font-weight: 800; }
+.review-saved { margin-bottom: 12px !important; color: #674710 !important; }
 
 @media (max-width: 767.98px) {
     .messages-layout { grid-template-columns: 1fr; }
