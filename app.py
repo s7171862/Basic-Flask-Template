@@ -243,24 +243,94 @@ def begin_registration(role):
 
 @app.route('/admin', methods=["GET","POST"])
 def admin():
-
-    if 'permission' not in session:
+    if session.get('permission') != 'admin':
         return redirect("./")
-    else:
-        if session['permission'] != 'admin':
-            return redirect("./")
-
-    results = DATABASE.ViewQuery("SELECT * FROM users")
 
     if request.method == "POST":
-        selected_users = [userid for userid in request.form.getlist("selectedusers") if userid.isdigit() and int(userid) != 1]
+        selected_users = [userid for userid in request.form.getlist("selectedusers")
+                          if userid.isdigit() and int(userid) not in (1, session['userid'])]
         if selected_users:
             placeholders = ', '.join('?' for _ in selected_users)
             DATABASE.ModifyQuery(f"DELETE FROM users WHERE userid IN ({placeholders})", tuple(selected_users))
+            flash(f"Deleted {len(selected_users)} selected account(s).")
         return redirect("./admin")
 
+    summary = DATABASE.ViewQuery("""SELECT
+        (SELECT COUNT(*) FROM users) AS users_count,
+        (SELECT COUNT(*) FROM users WHERE permission = 'User (Renter)') AS renters_count,
+        (SELECT COUNT(*) FROM users WHERE permission = 'User (Tool Provider)') AS providers_count,
+        (SELECT COUNT(*) FROM tools) AS tools_count,
+        (SELECT COUNT(*) FROM tools WHERE is_available = 1) AS available_tools_count,
+        (SELECT COUNT(*) FROM tool_rentals WHERE status = 'active') AS active_rentals_count,
+        (SELECT COUNT(*) FROM tool_rentals WHERE status = 'completed') AS completed_rentals_count,
+        (SELECT COUNT(*) FROM claims WHERE status = 'open') AS open_claims_count,
+        (SELECT COUNT(*) FROM conversations) AS conversations_count""")[0]
+    results = DATABASE.ViewQuery("""SELECT users.userid, users.firstname, users.lastname, users.email,
+        users.permission, users.status, users.profilephoto, users.lastaccess,
+        (SELECT COUNT(*) FROM tools WHERE tools.providerid = users.userid) AS listing_count,
+        (SELECT COUNT(*) FROM tool_rentals WHERE tool_rentals.renterid = users.userid) AS renter_rental_count,
+        (SELECT COUNT(*) FROM tool_rentals WHERE tool_rentals.providerid = users.userid) AS provider_rental_count
+        FROM users ORDER BY users.userid ASC""") or []
+    active_rentals = DATABASE.ViewQuery("""SELECT tool_rentals.rentalid, tool_rentals.status, tool_rentals.total,
+        tool_rentals.start_date, tool_rentals.end_date, tools.title,
+        renter.firstname || ' ' || renter.lastname AS renter_name,
+        provider.firstname || ' ' || provider.lastname AS provider_name
+        FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid
+        JOIN users AS renter ON renter.userid = tool_rentals.renterid
+        JOIN users AS provider ON provider.userid = tool_rentals.providerid
+        WHERE tool_rentals.status = 'active' ORDER BY tool_rentals.created_at DESC LIMIT 8""") or []
+    open_claims = DATABASE.ViewQuery("""SELECT claims.claimid, claims.description, claims.created_at, claims.status,
+        tools.title, users.firstname || ' ' || users.lastname AS provider_name
+        FROM claims JOIN tool_rentals ON tool_rentals.rentalid = claims.rentalid
+        JOIN tools ON tools.toolid = tool_rentals.toolid
+        JOIN users ON users.userid = claims.providerid
+        WHERE claims.status = 'open' ORDER BY claims.created_at DESC LIMIT 8""") or []
     app.logger.info("Admin")
-    return render_template("admin.html", results=results)
+    return render_template("admin.html", summary=summary, results=results, active_rentals=active_rentals, open_claims=open_claims)
+
+
+@app.route('/admin/users/<int:user_id>', methods=['GET', 'POST'])
+def admin_user_edit(user_id):
+    """Let an administrator safely view and update a member account."""
+    if session.get('permission') != 'admin':
+        return redirect('./')
+
+    user_result = DATABASE.ViewQuery(
+        "SELECT userid, firstname, lastname, email, permission, status, profilephoto, lastaccess FROM users WHERE userid = ?",
+        (user_id,)
+    )
+    if not user_result:
+        flash('That user account no longer exists.')
+        return redirect('/admin')
+    user = user_result[0]
+
+    if request.method == 'POST':
+        firstname = request.form.get('firstname', '').strip()
+        lastname = request.form.get('lastname', '').strip()
+        email = request.form.get('email', '').strip().lower()
+        permission = request.form.get('permission', '')
+        status = request.form.get('status', '').strip()[:120]
+        allowed_permissions = {'admin', 'User (Renter)', 'User (Tool Provider)'}
+
+        if not all((firstname, lastname, email)) or permission not in allowed_permissions:
+            flash('Enter a first name, last name, email, and valid account role.')
+            user.update({'firstname': firstname, 'lastname': lastname, 'email': email, 'permission': permission, 'status': status})
+            return render_template('admin_user_edit.html', user=user)
+        if user_id == session['userid'] and permission != 'admin':
+            flash('You cannot remove your own administrator access.')
+            return render_template('admin_user_edit.html', user=user)
+        if DATABASE.ViewQuery("SELECT userid FROM users WHERE email = ? AND userid != ?", (email, user_id)):
+            flash('That email address is already used by another account.')
+            return render_template('admin_user_edit.html', user=user)
+
+        updated = DATABASE.ModifyQuery(
+            "UPDATE users SET firstname = ?, lastname = ?, email = ?, permission = ?, status = ? WHERE userid = ?",
+            (firstname, lastname, email, permission, status or None, user_id)
+        )
+        flash('User account updated.' if updated else 'User account could not be updated.')
+        return redirect(url_for('admin_user_edit', user_id=user_id))
+
+    return render_template('admin_user_edit.html', user=user)
 
 @app.route('/home')
 def home():

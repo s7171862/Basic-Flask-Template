@@ -488,10 +488,41 @@
 .advice-bot-form input { min-width: 0; flex: 1; padding: 11px 13px; border: 1px solid #d9bd6c; border-radius: 10px; }
 .advice-bot-note { margin: 12px 0 0; color: #715831; font-size: 0.84rem; }
 
+/* Administrator dashboard */
+.admin-stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.admin-stat-grid article { display: flex; flex-direction: column; gap: 4px; min-height: 126px; padding: 20px; border: 1px solid #e7c468; border-radius: 16px; background: #fffdf6; box-shadow: 0 8px 16px rgba(122, 92, 32, 0.06); }
+.admin-stat-grid span { color: #8c651c; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.admin-stat-grid strong { color: #3d2c10; font-size: 2rem; line-height: 1.1; }
+.admin-stat-grid small, .admin-panel-copy { color: #715831; }
+.admin-table-panel { overflow: hidden; }
+.admin-table { margin-bottom: 16px; color: #4d3510; }
+.admin-table thead th { border-bottom-color: #d9bd6c; color: #6b4d13; font-size: 0.77rem; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+.admin-table td { border-color: #f0e2ae; }
+.admin-member { display: flex; align-items: center; gap: 10px; min-width: 180px; }
+.admin-member img, .admin-member > span { width: 38px; height: 38px; flex: 0 0 38px; border: 1px solid #d2ae50; border-radius: 50%; object-fit: cover; }
+.admin-member > span { display: grid; place-items: center; background: #f8d363; color: #4d3510; font-size: 0.78rem; font-weight: 800; }
+.admin-member strong, .admin-member small { display: block; }
+.admin-member small { color: #715831; font-size: 0.78rem; overflow-wrap: anywhere; }
+.admin-member-large { margin: 2px 0 6px; }
+.admin-member-large img, .admin-member-large > span { width: 64px; height: 64px; flex-basis: 64px; font-size: 1.1rem; }
+.admin-role { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #fff1bd; color: #674710; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+.admin-claim-list { display: grid; gap: 12px; }
+.admin-claim-list article { padding: 13px; border: 1px solid #ead58e; border-radius: 12px; background: #fffefa; }
+.admin-claim-list strong, .admin-claim-list span, .admin-claim-list small { display: block; }
+.admin-claim-list strong { color: #4d3510; }
+.admin-claim-list span, .admin-claim-list small { color: #715831; font-size: 0.82rem; }
+.admin-claim-list p { margin: 8px 0; color: #4f3a20; overflow-wrap: anywhere; }
+.admin-edit-card { max-width: 760px; }
+
 @media (max-width: 767.98px) {
     .messages-layout { grid-template-columns: 1fr; }
     .chat-panel { min-height: auto; }
     .chat-empty-state { min-height: 220px; }
     .advice-bot-form { flex-direction: column; }
     .chat-header { align-items: flex-start; flex-direction: column; }
+    .admin-stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 420px) {
+    .admin-stat-grid { grid-template-columns: 1fr; }
 }

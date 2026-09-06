@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="dashboard-page">
+    <section class="dashboard-hero"><span class="dashboard-eyebrow">Administrator workspace</span><h1>Manage {{ user.firstname }} {{ user.lastname }}</h1><p>Review and update this account without exposing its password or session data.</p><a href="/admin" class="btn btn-outline-primary btn-sm mt-3">Back to admin</a></section>
+    <section class="workspace-panel admin-edit-card">
+        <div class="admin-member admin-member-large">{% if user.profilephoto %}<img src="/{{ user.profilephoto }}" alt="{{ user.firstname }}'s profile photo">{% else %}<span>{{ user.firstname[0] }}{{ user.lastname[0] }}</span>{% endif %}<div><strong>Account #{{ user.userid }}</strong><small>Last access: {{ user.lastaccess }}</small></div></div>
+        <form method="POST" class="row g-3 mt-2">
+            <div class="col-md-6"><label class="form-label" for="firstname">First name</label><input class="form-control" id="firstname" name="firstname" value="{{ user.firstname }}" required></div>
+            <div class="col-md-6"><label class="form-label" for="lastname">Last name</label><input class="form-control" id="lastname" name="lastname" value="{{ user.lastname }}" required></div>
+            <div class="col-md-7"><label class="form-label" for="email">Email</label><input class="form-control" id="email" name="email" type="email" value="{{ user.email }}" required></div>
+            <div class="col-md-5"><label class="form-label" for="permission">Account role</label><select class="form-select" id="permission" name="permission" required>{% for role in ['User (Renter)', 'User (Tool Provider)', 'admin'] %}<option value="{{ role }}" {% if user.permission == role %}selected{% endif %}>{{ role }}</option>{% endfor %}</select></div>
+            <div class="col-12"><label class="form-label" for="status">Admin status note <span class="optional-label">optional</span></label><input class="form-control" id="status" name="status" maxlength="120" value="{{ user.status or '' }}" placeholder="Example: Active, warning issued, or suspended"></div>
+            <div class="col-12"><p class="admin-panel-copy">Profile photos, passwords, and session tokens are not changed from this screen.</p><button class="btn btn-primary">Save account changes</button></div>
+        </form>
+    </section>
+</main>
+{% endblock %}
