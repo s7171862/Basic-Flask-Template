@@ -51,8 +51,8 @@ CREATE TABLE tools (
    providerid INTEGER NOT NULL,
    title TEXT NOT NULL,
    description TEXT NOT NULL,
-   daily_rate REAL NOT NULL,
-   original_value REAL NOT NULL,
+   daily_rate REAL NOT NULL CHECK (daily_rate > 0),
+   original_value REAL NOT NULL CHECK (original_value > 0),
    city TEXT NOT NULL,
    suburb TEXT NOT NULL,
    tool_type TEXT NOT NULL,
@@ -61,8 +61,9 @@ CREATE TABLE tools (
    toolphoto TEXT NOT NULL,
    available_from DATE NOT NULL,
    available_until DATE NOT NULL,
-   is_available INTEGER NOT NULL DEFAULT 1,
+   is_available INTEGER NOT NULL DEFAULT 1 CHECK (is_available IN (0, 1)),
    created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+   CHECK (available_until >= available_from),
    FOREIGN KEY(providerid) REFERENCES users(userid) ON DELETE CASCADE
 );
 
@@ -72,16 +73,17 @@ CREATE TABLE tool_rentals (
    renterid INTEGER NOT NULL,
    providerid INTEGER NOT NULL,
    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed')),
-   total REAL NOT NULL,
+   total REAL NOT NULL CHECK (total >= 0),
    start_date DATE NOT NULL,
    end_date DATE NOT NULL,
-   rental_days INTEGER NOT NULL,
-   rental_cost REAL NOT NULL,
-   security_deposit REAL NOT NULL,
-   insurance_selected INTEGER NOT NULL DEFAULT 0,
-   insurance_cost REAL NOT NULL DEFAULT 0,
+   rental_days INTEGER NOT NULL CHECK (rental_days > 0),
+   rental_cost REAL NOT NULL CHECK (rental_cost >= 0),
+   security_deposit REAL NOT NULL CHECK (security_deposit >= 0),
+   insurance_selected INTEGER NOT NULL DEFAULT 0 CHECK (insurance_selected IN (0, 1)),
+   insurance_cost REAL NOT NULL DEFAULT 0 CHECK (insurance_cost >= 0),
    created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
    completed_at DATE NULL,
+   CHECK (end_date >= start_date),
    FOREIGN KEY(toolid) REFERENCES tools(toolid),
    FOREIGN KEY(renterid) REFERENCES users(userid),
    FOREIGN KEY(providerid) REFERENCES users(userid)
@@ -95,6 +97,18 @@ CREATE TABLE tool_wishlists (
    FOREIGN KEY(renterid) REFERENCES users(userid) ON DELETE CASCADE,
    FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE
 );
+
+-- These indexes match the most common dashboard, search, and booking queries.
+CREATE INDEX idx_tools_provider ON tools(providerid);
+CREATE INDEX idx_tools_availability_dates ON tools(is_available, available_from, available_until);
+CREATE INDEX idx_tools_location ON tools(city, suburb);
+CREATE INDEX idx_tools_filters ON tools(tool_type, brand, tool_condition, daily_rate);
+CREATE INDEX idx_tool_rentals_provider_status ON tool_rentals(providerid, status, completed_at);
+CREATE INDEX idx_tool_rentals_renter_status ON tool_rentals(renterid, status, completed_at);
+CREATE INDEX idx_tool_rentals_tool_status ON tool_rentals(toolid, status);
+CREATE INDEX idx_tool_wishlists_renter ON tool_wishlists(renterid, wishlistid);
+CREATE INDEX idx_ratings_provider ON ratings(providerid, rentalid);
+CREATE INDEX idx_claims_provider_status ON claims(providerid, status);
 
 INSERT INTO users (email, firstname, lastname, password, permission) values
 ('admin@admin', 'Firstname', 'Lastname', 'admin', 'admin');

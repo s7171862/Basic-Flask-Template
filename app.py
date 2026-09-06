@@ -1,12 +1,13 @@
-from flask import *
+from flask import Flask, abort, flash, redirect, render_template, request, send_from_directory, session, url_for
 import sys, os, uuid
 from datetime import date
 import logging
 from interfaces.databaseinterface import Database
-from interfaces.hashing import *
+from interfaces.hashing import check_password, hash_password
 from werkzeug.utils import secure_filename
 
 #---CONFIGURE APP---------------------------------------------------
+os.makedirs('logs', exist_ok=True)
 app = Flask(__name__)
 logging.basicConfig(filename='logs/flask.log', level=logging.INFO)
 sys.tracebacklimit = 10
@@ -17,7 +18,10 @@ TOOL_UPLOAD_FOLDER = 'toolphotos'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['TOOL_UPLOAD_FOLDER'] = TOOL_UPLOAD_FOLDER
-app.config['SECRET_KEY'] = "Type in secret line of text"
+# Set TOOLLY_SECRET_KEY in the environment before deploying.  The fallback
+# keeps this school-project copy easy to run locally.
+app.config['SECRET_KEY'] = os.environ.get('TOOLLY_SECRET_KEY', 'toolly-local-development-key')
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5 MB image upload limit
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -30,10 +34,91 @@ def disable_development_cache(response):
     response.headers['Expires'] = '0'
     return response
 
+
+@app.errorhandler(413)
+def upload_too_large(error):
+    """Show a useful page message when an image exceeds the upload limit."""
+    flash('Images must be 5 MB or smaller.')
+    return redirect(url_for('home') if 'userid' in session else url_for('landing'))
+
 # Function to check the file extension
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def save_uploaded_image(upload, folder, prefix):
+    """Validate and save one image, returning its web path or ``None``.
+
+    Keeping filename creation in one place prevents duplicate file-handling
+    code and avoids users overwriting one another's uploads.
+    """
+    if not upload or not upload.filename or not allowed_file(upload.filename):
+        return None
+    extension = secure_filename(upload.filename).rsplit('.', 1)[1].lower()
+    filename = f"{prefix}_{uuid.uuid4().hex}.{extension}"
+    upload.save(os.path.join(folder, filename))
+    return os.path.join(folder, filename).replace('\\', '/')
+
+
+def read_tool_form():
+    """Return validated tool form data, or an error message for the user."""
+    fields = {name: request.form.get(name, '').strip() for name in
+              ('title', 'description', 'city', 'suburb', 'tool_type', 'brand', 'tool_condition')}
+    try:
+        daily_rate = float(request.form.get('daily_rate', ''))
+        original_value = float(request.form.get('original_value', ''))
+        available_from = date.fromisoformat(request.form.get('available_from', ''))
+        available_until = date.fromisoformat(request.form.get('available_until', ''))
+    except (TypeError, ValueError):
+        return None, 'Enter valid prices and availability dates.'
+
+    if not all(fields.values()) or daily_rate <= 0 or original_value <= 0 or available_until < available_from:
+        return None, 'Complete every tool field, use positive prices, and choose valid availability dates.'
+
+    fields.update({
+        'daily_rate': daily_rate,
+        'original_value': original_value,
+        'available_from': available_from.isoformat(),
+        'available_until': available_until.isoformat(),
+        'location': f"{fields['suburb']}, {fields['city']}"
+    })
+    return fields, None
+
+
+def create_account(permission):
+    """Validate, create, and sign in a renter or provider account."""
+    firstname = request.form.get('fname', '').strip()
+    lastname = request.form.get('lname', '').strip()
+    email = request.form.get('email', '').strip().lower()
+    password = request.form.get('password', '')
+    password_confirm = request.form.get('passwordconfirm', '')
+    if not all((firstname, lastname, email, password)):
+        return 'Complete all required fields.'
+    if password != password_confirm:
+        return 'Error, passwords do not match.'
+    if DATABASE.ViewQuery("SELECT userid FROM users WHERE email = ?", (email,)):
+        return 'Error, a user with that email already exists.'
+
+    profile_photo = ''
+    upload = request.files.get('file')
+    if upload and upload.filename:
+        profile_photo = save_uploaded_image(upload, UPLOAD_FOLDER, 'profile')
+        if not profile_photo:
+            return 'Profile photos must be PNG, JPG, JPEG, or GIF files.'
+
+    if not DATABASE.ModifyQuery(
+        "INSERT INTO users (firstname, lastname, email, password, profilephoto, permission) VALUES (?, ?, ?, ?, ?, ?)",
+        (firstname, lastname, email, hash_password(password), profile_photo, permission)
+    ):
+        return 'Your account could not be created. Please try again.'
+
+    user = DATABASE.ViewQuery("SELECT userid, firstname, lastname, profilephoto, permission FROM users WHERE email = ?", (email,))[0]
+    session['permission'] = user['permission']
+    session['userid'] = user['userid']
+    session['name'] = f"{user['firstname']} {user['lastname']}"
+    session['profilephoto'] = user['profilephoto']
+    return None
 
 # Initialize database with schema if it doesn't exist
 def init_database():
@@ -60,12 +145,18 @@ def migrate_database():
         schema = f.read()
     conn = sqlite3.connect("database/test.db")
     conn.execute("PRAGMA foreign_keys = ON")
+    conn.execute("PRAGMA journal_mode = WAL")
+    conn.execute("PRAGMA synchronous = NORMAL")
     for statement in schema.split(';'):
         # Ignore SQL comments before testing a statement, so the maintenance
         # note at the top of createscript.txt does not hide CREATE TABLE users.
         statement = '\n'.join(line for line in statement.splitlines() if not line.lstrip().startswith('--')).strip()
-        if statement.upper().startswith('CREATE TABLE'):
+        normalized = statement.upper()
+        if normalized.startswith('CREATE TABLE'):
             statement = statement.replace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', 1)
+            conn.execute(statement)
+        elif normalized.startswith('CREATE INDEX'):
+            statement = statement.replace('CREATE INDEX', 'CREATE INDEX IF NOT EXISTS', 1)
             conn.execute(statement)
     tool_columns = {column[1] for column in conn.execute("PRAGMA table_info(tools)").fetchall()}
     if 'toolphoto' not in tool_columns:
@@ -99,6 +190,7 @@ def migrate_database():
     conn.commit()
     conn.close()
 
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     os.makedirs(TOOL_UPLOAD_FOLDER, exist_ok=True)
 
 init_database()
@@ -147,10 +239,10 @@ def admin():
     results = DATABASE.ViewQuery("SELECT * FROM users")
 
     if request.method == "POST":
-        selectedusers = request.form.getlist("selectedusers")
-        for userid in selectedusers:
-            if int(userid) != 1:
-                DATABASE.ModifyQuery("DELETE FROM users WHERE userid = ?", (userid,))
+        selected_users = [userid for userid in request.form.getlist("selectedusers") if userid.isdigit() and int(userid) != 1]
+        if selected_users:
+            placeholders = ', '.join('?' for _ in selected_users)
+            DATABASE.ModifyQuery(f"DELETE FROM users WHERE userid IN ({placeholders})", tuple(selected_users))
         return redirect("./admin")
 
     app.logger.info("Admin")
@@ -185,37 +277,24 @@ def provider_listings():
     if not provider_only():
         return redirect('./')
     if request.method == 'POST':
-        title = request.form['title'].strip()
-        description = request.form['description'].strip()
-        try:
-            daily_rate = float(request.form['daily_rate'])
-            original_value = float(request.form['original_value'])
-        except ValueError:
-            daily_rate = 0
-            original_value = 0
-        city = request.form['city'].strip()
-        suburb = request.form['suburb'].strip()
-        tool_type = request.form['tool_type'].strip()
-        brand = request.form['brand'].strip()
-        tool_condition = request.form['tool_condition'].strip()
-        available_from = request.form['available_from']
-        available_until = request.form['available_until']
-        tool_photo = request.files.get('toolphoto')
-        photo_is_valid = tool_photo and tool_photo.filename and allowed_file(tool_photo.filename)
-        if not all([title, description, city, suburb, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or original_value <= 0 or available_until < available_from:
-            flash('Complete every tool field, use a valid daily rate, and choose valid availability dates.')
-        elif not photo_is_valid:
-            flash('A tool photo is required. Please upload a PNG, JPG, JPEG, or GIF image.')
+        tool_data, error = read_tool_form()
+        if error:
+            flash(error)
         else:
-            extension = secure_filename(tool_photo.filename).rsplit('.', 1)[1].lower()
-            photo_filename = f"tool_{session['userid']}_{uuid.uuid4().hex}.{extension}"
-            tool_photo_path = os.path.join(app.config['TOOL_UPLOAD_FOLDER'], photo_filename)
-            tool_photo.save(tool_photo_path)
-            DATABASE.ModifyQuery(
+            tool_photo_path = save_uploaded_image(request.files.get('toolphoto'), TOOL_UPLOAD_FOLDER, f"tool_{session['userid']}")
+            if not tool_photo_path:
+                flash('A tool photo is required. Please upload a PNG, JPG, JPEG, or GIF image.')
+                tools = DATABASE.ViewQuery("SELECT * FROM tools WHERE providerid = ? ORDER BY toolid DESC", (session['userid'],)) or []
+                return render_template('provider_listings.html', tools=tools)
+            created = DATABASE.ModifyQuery(
                 """INSERT INTO tools (providerid, title, description, daily_rate, original_value, city, suburb, location, tool_type, brand, tool_condition, toolphoto, available_from, available_until)
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                (session['userid'], title, description, daily_rate, original_value, city, suburb, f"{suburb}, {city}", tool_type, brand, tool_condition, tool_photo_path, available_from, available_until)
+                (session['userid'], tool_data['title'], tool_data['description'], tool_data['daily_rate'], tool_data['original_value'], tool_data['city'], tool_data['suburb'], tool_data['location'], tool_data['tool_type'], tool_data['brand'], tool_data['tool_condition'], tool_photo_path, tool_data['available_from'], tool_data['available_until'])
             )
+            if not created:
+                os.remove(tool_photo_path)
+                flash('Your tool could not be added. Please try again.')
+                return redirect('/provider/listings')
             flash('Your tool has been added to the Toolly marketplace.')
             return redirect('/provider/listings')
     tools = DATABASE.ViewQuery("SELECT * FROM tools WHERE providerid = ? ORDER BY toolid DESC", (session['userid'],)) or []
@@ -231,40 +310,23 @@ def provider_edit_listing(tool_id):
     tool = tool_result[0]
 
     if request.method == 'POST':
-        title = request.form['title'].strip()
-        description = request.form['description'].strip()
-        city = request.form['city'].strip()
-        suburb = request.form['suburb'].strip()
-        tool_type = request.form['tool_type'].strip()
-        brand = request.form['brand'].strip()
-        tool_condition = request.form['tool_condition'].strip()
-        available_from = request.form['available_from']
-        available_until = request.form['available_until']
-        try:
-            daily_rate = float(request.form['daily_rate'])
-            original_value = float(request.form['original_value'])
-        except ValueError:
-            daily_rate = 0
-            original_value = 0
-        if not all([title, description, city, suburb, tool_type, brand, tool_condition, available_from, available_until]) or daily_rate <= 0 or original_value <= 0 or available_until < available_from:
-            flash('Complete every tool field, use a valid daily rate, and choose valid availability dates.')
+        tool_data, error = read_tool_form()
+        if error:
+            flash(error)
             return render_template('provider_edit_listing.html', tool=tool)
 
         tool_photo_path = tool['toolphoto']
         tool_photo = request.files.get('toolphoto')
         if tool_photo and tool_photo.filename:
-            if not allowed_file(tool_photo.filename):
+            tool_photo_path = save_uploaded_image(tool_photo, TOOL_UPLOAD_FOLDER, f"tool_{session['userid']}")
+            if not tool_photo_path:
                 flash('Tool photos must be PNG, JPG, JPEG, or GIF files.')
                 return render_template('provider_edit_listing.html', tool=tool)
-            extension = secure_filename(tool_photo.filename).rsplit('.', 1)[1].lower()
-            photo_filename = f"tool_{session['userid']}_{uuid.uuid4().hex}.{extension}"
-            tool_photo_path = os.path.join(app.config['TOOL_UPLOAD_FOLDER'], photo_filename)
-            tool_photo.save(tool_photo_path)
 
         DATABASE.ModifyQuery(
             """UPDATE tools SET title = ?, description = ?, daily_rate = ?, original_value = ?, city = ?, suburb = ?, location = ?, tool_type = ?, brand = ?, tool_condition = ?, toolphoto = ?, available_from = ?, available_until = ?
                WHERE toolid = ? AND providerid = ?""",
-            (title, description, daily_rate, original_value, city, suburb, f"{suburb}, {city}", tool_type, brand, tool_condition, tool_photo_path, available_from, available_until, tool_id, session['userid'])
+            (tool_data['title'], tool_data['description'], tool_data['daily_rate'], tool_data['original_value'], tool_data['city'], tool_data['suburb'], tool_data['location'], tool_data['tool_type'], tool_data['brand'], tool_data['tool_condition'], tool_photo_path, tool_data['available_from'], tool_data['available_until'], tool_id, session['userid'])
         )
         flash('Your tool listing has been updated.')
         return redirect('/provider/listings')
@@ -292,13 +354,12 @@ def provider_active_rentals():
     if request.method == 'POST':
         rental_id = request.form.get('rentalid', type=int)
         rental = DATABASE.ViewQuery("SELECT toolid FROM tool_rentals WHERE rentalid = ? AND providerid = ? AND status = 'active'", (rental_id, session['userid']))
-        DATABASE.ModifyQuery(
-            "UPDATE tool_rentals SET status = 'completed', completed_at = datetime('now','localtime') WHERE rentalid = ? AND providerid = ? AND status = 'active'",
-            (rental_id, session['userid'])
-        )
         if rental:
-            DATABASE.ModifyQuery("UPDATE tools SET is_available = 1 WHERE toolid = ?", (rental[0]['toolid'],))
-        flash('Rental marked as completed.')
+            completed = DATABASE.ModifyMany([
+                ("UPDATE tool_rentals SET status = 'completed', completed_at = datetime('now','localtime') WHERE rentalid = ? AND providerid = ? AND status = 'active'", (rental_id, session['userid'])),
+                ("UPDATE tools SET is_available = 1 WHERE toolid = ?", (rental[0]['toolid'],))
+            ])
+            flash('Rental marked as completed.' if completed else 'Could not complete that rental. Please try again.')
         return redirect('/provider/active-rentals')
     rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS renter_name
                                   FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid
@@ -363,8 +424,15 @@ def renter_browse():
     params = []
     for field in ('city', 'suburb', 'tool_type', 'brand', 'tool_condition'):
         if filters[field]:
-            query += f" AND lower(tools.{field}) LIKE ?"
-            params.append('%' + filters[field].lower() + '%')
+            if field in ('city', 'suburb', 'tool_condition'):
+                # These are controlled dropdown values, so equality is faster
+                # and lets SQLite use the location/filter indexes.
+                query += f" AND tools.{field} = ?"
+                params.append(filters[field])
+            else:
+                # Tool type and brand remain partial text searches.
+                query += f" AND lower(tools.{field}) LIKE ?"
+                params.append('%' + filters[field].lower() + '%')
     if max_price:
         try:
             query += " AND tools.daily_rate <= ?"
@@ -372,8 +440,12 @@ def renter_browse():
         except ValueError:
             flash('Maximum price must be a number.')
     if filters['available_on']:
-        query += " AND tools.available_from <= ? AND tools.available_until >= ?"
-        params.extend([filters['available_on'], filters['available_on']])
+        try:
+            available_on = date.fromisoformat(filters['available_on']).isoformat()
+            query += " AND tools.available_from <= ? AND tools.available_until >= ?"
+            params.extend([available_on, available_on])
+        except ValueError:
+            flash('Availability date must be valid.')
     if not show_unavailable:
         query += " AND tools.is_available = 1"
     query += " ORDER BY tools.toolid DESC"
@@ -407,13 +479,15 @@ def renter_book_tool(tool_id):
         insurance_selected = 1 if request.form.get('insurance') else 0
         insurance_cost = (5 * (2 ** max(0, int((tool['original_value'] - 0.01) // 100)))) if insurance_selected else 0
         total = rental_cost + security_deposit + insurance_cost
-        DATABASE.ModifyQuery(
-            """INSERT INTO tool_rentals (toolid, renterid, providerid, total, start_date, end_date, rental_days, rental_cost, security_deposit, insurance_selected, insurance_cost)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (tool_id, session['userid'], tool['providerid'], total, start_date.isoformat(), end_date.isoformat(), rental_days, rental_cost, security_deposit, insurance_selected, insurance_cost)
-        )
-        DATABASE.ModifyQuery("UPDATE tools SET is_available = 0 WHERE toolid = ?", (tool_id,))
-        flash('Booking confirmed. Your simulated payment has been recorded.')
+        booked = DATABASE.ModifyMany([
+            ("""INSERT INTO tool_rentals (toolid, renterid, providerid, total, start_date, end_date, rental_days, rental_cost, security_deposit, insurance_selected, insurance_cost)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+             (tool_id, session['userid'], tool['providerid'], total, start_date.isoformat(), end_date.isoformat(), rental_days, rental_cost, security_deposit, insurance_selected, insurance_cost)),
+            ("UPDATE tools SET is_available = 0 WHERE toolid = ?", (tool_id,))
+        ])
+        flash('Booking confirmed. Your simulated payment has been recorded.' if booked else 'Your booking could not be saved. Please try again.')
+        if not booked:
+            return render_template('renter_booking.html', tool=tool)
         return redirect('/renter/rentals')
     return render_template('renter_booking.html', tool=tool)
 
@@ -428,9 +502,11 @@ def renter_rentals():
             (rental_id, session['userid'])
         )
         if rental:
-            DATABASE.ModifyQuery("DELETE FROM tool_rentals WHERE rentalid = ? AND renterid = ?", (rental_id, session['userid']))
-            DATABASE.ModifyQuery("UPDATE tools SET is_available = 1 WHERE toolid = ?", (rental[0]['toolid'],))
-            flash('Your rental has been cancelled and the tool is available again.')
+            cancelled = DATABASE.ModifyMany([
+                ("DELETE FROM tool_rentals WHERE rentalid = ? AND renterid = ?", (rental_id, session['userid'])),
+                ("UPDATE tools SET is_available = 1 WHERE toolid = ?", (rental[0]['toolid'],))
+            ])
+            flash('Your rental has been cancelled and the tool is available again.' if cancelled else 'Your rental could not be cancelled. Please try again.')
         return redirect('/renter/rentals')
     rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS provider_name
                                   FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid JOIN users ON users.userid = tool_rentals.providerid
@@ -473,9 +549,13 @@ def profile():
     user = results[0]
 
     if request.method == 'POST':
-        firstname = request.form['fname'].strip()
-        lastname = request.form['lname'].strip()
-        email = request.form['email'].strip().lower()
+        firstname = request.form.get('fname', '').strip()
+        lastname = request.form.get('lname', '').strip()
+        email = request.form.get('email', '').strip().lower()
+
+        if not all((firstname, lastname, email)):
+            flash('First name, last name, and email are required.')
+            return render_template('profile.html', user=user)
 
         existing_email = DATABASE.ViewQuery(
             "SELECT userid FROM users WHERE email = ? AND userid != ?", (email, user_id)
@@ -487,13 +567,10 @@ def profile():
         filepath = user['profilephoto'] or ''
         file = request.files.get('file')
         if file and file.filename:
-            if not allowed_file(file.filename):
+            filepath = save_uploaded_image(file, UPLOAD_FOLDER, 'profile')
+            if not filepath:
                 flash('Please upload a PNG, JPG, JPEG, or GIF image.')
                 return render_template('profile.html', user=user)
-            extension = secure_filename(file.filename).rsplit('.', 1)[1].lower()
-            filename = f"{user_id}_{uuid.uuid4().hex}.{extension}"
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
 
         DATABASE.ModifyQuery(
             "UPDATE users SET firstname = ?, lastname = ?, email = ?, profilephoto = ? WHERE userid = ?",
@@ -518,8 +595,8 @@ def login():
 
     message = "Please login"
     if request.method == "POST":
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get('email', '').strip().lower()
+        password = request.form.get('password', '')
         results = DATABASE.ViewQuery("SELECT * FROM users WHERE email = ?", (email,))
         if results:
             userdetails = results[0] #row in the user table (Python Dictionary)
@@ -558,51 +635,10 @@ def register_renter():
 
     message = "Please register as a Renter"
     if request.method == "POST":
-
-        firstname = request.form['fname']
-        lastname = request.form['lname']
-        password = request.form['password']
-        passwordconfirm = request.form['passwordconfirm']
-        email = request.form['email']
-
-        if password != passwordconfirm:
-            message = "Error, passwords do not match"
-        else:
-            results = DATABASE.ViewQuery("SELECT * FROM users WHERE email = ?", (email,))
-            if results:
-                message = "Error, user already exists"
-            else:
-
-                #UPLOAD A FILE
-                filepath = ''
-                app.logger.info(request.files)
-                if 'file' in request.files:
-                    
-                    file = request.files['file']
-                    if file and allowed_file(file.filename):
-                        filename = secure_filename(file.filename)
-                        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                        file.save(filepath)
-                        flash("File uploaded successfully")
-                    else:
-                        flash("Problem with file upload")
-                else:
-                    flash("File not found")
-
-                password = hash_password(password)
-                permission = "User (Renter)"
-                DATABASE.ModifyQuery("INSERT INTO users (firstname, lastname, email, password, profilephoto, permission) VALUES (?,?,?,?,?,?)", (firstname, lastname, email, password, filepath, permission))
-                message = "Success, user has been added"
-                
-                # Log the user in automatically after registration
-                user_data = DATABASE.ViewQuery("SELECT * FROM users WHERE email = ?", (email,))[0]
-                session['permission'] = user_data['permission']
-                session['userid'] = user_data['userid']
-                session['name'] = user_data['firstname'] + " " + user_data['lastname']
-                session['profilephoto'] = user_data['profilephoto']
-                session.pop('registration_form_role', None)
-                
-                return redirect('/home')
+        message = create_account("User (Renter)")
+        if message is None:
+            session.pop('registration_form_role', None)
+            return redirect('/home')
 
     return render_template("register_renter.html", message=message)
 
@@ -619,51 +655,10 @@ def register_provider():
 
     message = "Please register as a Tool Provider"
     if request.method == "POST":
-
-        firstname = request.form['fname']
-        lastname = request.form['lname']
-        password = request.form['password']
-        passwordconfirm = request.form['passwordconfirm']
-        email = request.form['email']
-
-        if password != passwordconfirm:
-            message = "Error, passwords do not match"
-        else:
-            results = DATABASE.ViewQuery("SELECT * FROM users WHERE email = ?", (email,))
-            if results:
-                message = "Error, user already exists"
-            else:
-
-                #UPLOAD A FILE
-                filepath = ''
-                app.logger.info(request.files)
-                if 'file' in request.files:
-                    
-                    file = request.files['file']
-                    if file and allowed_file(file.filename):
-                        filename = secure_filename(file.filename)
-                        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                        file.save(filepath)
-                        flash("File uploaded successfully")
-                    else:
-                        flash("Problem with file upload")
-                else:
-                    flash("File not found")
-
-                password = hash_password(password)
-                permission = "User (Tool Provider)"
-                DATABASE.ModifyQuery("INSERT INTO users (firstname, lastname, email, password, profilephoto, permission) VALUES (?,?,?,?,?,?)", (firstname, lastname, email, password, filepath, permission))
-                message = "Success, user has been added"
-                
-                # Log the user in automatically after registration
-                user_data = DATABASE.ViewQuery("SELECT * FROM users WHERE email = ?", (email,))[0]
-                session['permission'] = user_data['permission']
-                session['userid'] = user_data['userid']
-                session['name'] = user_data['firstname'] + " " + user_data['lastname']
-                session['profilephoto'] = user_data['profilephoto']
-                session.pop('registration_form_role', None)
-                
-                return redirect('/home')
+        message = create_account("User (Tool Provider)")
+        if message is None:
+            session.pop('registration_form_role', None)
+            return redirect('/home')
 
     return render_template("register_provider.html", message=message)
 

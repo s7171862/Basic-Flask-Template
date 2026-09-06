@@ -5,22 +5,23 @@
 #-----------------------------------------------------------------------#
 import sqlite3
 import logging
-import sys
 
  # Create the database by DATABASE = DatabaseInterface("test.sqlite")
 class Database:
 
     #location is the sqlitedatabase file
-    def __init__(self, location="", log = logging.getLogger(__name__)):
+    def __init__(self, location="", log=None):
         self.location = location
-        self.logger = log
-        return
+        self.logger = log or logging.getLogger(__name__)
 
     # Returns a handle to the Database connection
     def connect(self):
-        connection = sqlite3.connect(self.location)
+        # A small timeout prevents "database is locked" errors when two local
+        # browser requests arrive at nearly the same time.
+        connection = sqlite3.connect(self.location, timeout=10)
         # SQLite enforces foreign keys per connection, not globally per file.
         connection.execute("PRAGMA foreign_keys = ON")
+        connection.execute("PRAGMA busy_timeout = 10000")
         connection.row_factory = sqlite3.Row #configures database queries to return a list of dictionaries (each row/record) [{"field1":value1,"field2":value2...},{etc},{} ]
         return connection
 
@@ -29,40 +30,47 @@ class Database:
     # If you only have one param, you still need to use a Tuple .e.g (userid,)
     def ViewQuery(self, query, params=None):
         connection = self.connect()
-        result = None
         try:
-            if params:
-                cursor = connection.execute(query, params)
-            else:
-                cursor = connection.execute(query)
-            result = cursor.fetchall() #returns a list of dictionaries
-        except (sqlite3.OperationalError, sqlite3.Warning, sqlite3.Error) as e:
-            self.logger.error("DATABASE ERROR: %s" % e)
-            self.logger.error(query)
-        connection.close()
-        if result:
-            return ([dict(row) for row in result]) #a list of dictionaries
-        else:
+            cursor = connection.execute(query, params or ())
+            result = cursor.fetchall()
+            return [dict(row) for row in result] if result else False
+        except sqlite3.Error as error:
+            self.logger.exception("Database read failed: %s | SQL: %s", error, query)
             return False
+        finally:
+            connection.close()
 
     # Created a helper function so to save time and also log results
     # Write your DELETE, INSERT, UPDATE Query, and pass in a Tuple(a,b,c etc ) representing any parameters
     def ModifyQuery(self, query, params=None):
         connection = self.connect()
-        result = None
         try:
-            if params:
-                connection.execute(query, params)
-            else:
-                connection.execute(query)
-            result = True
-        except (sqlite3.OperationalError, sqlite3.Warning, sqlite3.Error) as e:
-            self.logger.error("DATABASE ERROR: %s" % e)
-            self.logger.error(query)
-            result = False
-        connection.commit()
-        connection.close()
-        return result #Should be a true or false depending on success??
+            with connection:
+                connection.execute(query, params or ())
+            return True
+        except sqlite3.Error as error:
+            self.logger.exception("Database write failed: %s | SQL: %s", error, query)
+            return False
+        finally:
+            connection.close()
+
+    def ModifyMany(self, statements):
+        """Run related writes as one all-or-nothing database transaction.
+
+        ``statements`` is an iterable of ``(sql, parameters)`` pairs.  This is
+        used for actions such as creating a rental and marking its tool busy.
+        """
+        connection = self.connect()
+        try:
+            with connection:
+                for query, params in statements:
+                    connection.execute(query, params or ())
+            return True
+        except sqlite3.Error as error:
+            self.logger.exception("Database transaction failed: %s", error)
+            return False
+        finally:
+            connection.close()
 
     def log(self, message):
         self.logger.info(message)
