@@ -32,6 +32,9 @@
                             {% if session['permission'] == 'admin' %}
                                 <a href="/admin" class="nav-item nav-link">Admin</a>
                             {% endif %}
+                            {% if session['permission'] in ['User (Renter)', 'User (Tool Provider)'] %}
+                                <a href="/messages" class="nav-item nav-link">Messages</a>
+                            {% endif %}
                             <a href="/logout" class="nav-item nav-link">Logout</a>
                         {% endif %}
                     </div>

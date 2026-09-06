@@ -147,6 +147,7 @@ def migrate_database():
     conn.execute("PRAGMA foreign_keys = ON")
     conn.execute("PRAGMA journal_mode = WAL")
     conn.execute("PRAGMA synchronous = NORMAL")
+    index_statements = []
     for statement in schema.split(';'):
         # Ignore SQL comments before testing a statement, so the maintenance
         # note at the top of createscript.txt does not hide CREATE TABLE users.
@@ -156,8 +157,9 @@ def migrate_database():
             statement = statement.replace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', 1)
             conn.execute(statement)
         elif normalized.startswith('CREATE INDEX'):
-            statement = statement.replace('CREATE INDEX', 'CREATE INDEX IF NOT EXISTS', 1)
-            conn.execute(statement)
+            # Some existing databases need new columns before their message
+            # indexes can be created, so run indexes after all migrations.
+            index_statements.append(statement.replace('CREATE INDEX', 'CREATE INDEX IF NOT EXISTS', 1))
     tool_columns = {column[1] for column in conn.execute("PRAGMA table_info(tools)").fetchall()}
     if 'toolphoto' not in tool_columns:
         conn.execute("ALTER TABLE tools ADD COLUMN toolphoto TEXT NOT NULL DEFAULT ''")
@@ -179,6 +181,16 @@ def migrate_database():
     }.items():
         if column not in rental_columns:
             conn.execute(f"ALTER TABLE tool_rentals ADD COLUMN {column} {definition}")
+    message_columns = {column[1] for column in conn.execute("PRAGMA table_info(messages)").fetchall()}
+    for column, definition in {
+        'conversationid': 'INTEGER',
+        'authorid': 'INTEGER',
+        'created_at': "DATE NOT NULL DEFAULT ''"
+    }.items():
+        if column not in message_columns:
+            conn.execute(f"ALTER TABLE messages ADD COLUMN {column} {definition}")
+    if 'author' in message_columns:
+        conn.execute("UPDATE messages SET authorid = author WHERE authorid IS NULL")
     # Existing databases cannot add NOT NULL or FOREIGN KEY constraints with
     # ALTER TABLE. Apply the rules that SQLite can safely add in place.
     conn.execute("UPDATE users SET permission = 'user' WHERE permission IS NULL")
@@ -187,6 +199,8 @@ def migrate_database():
         conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_unique ON users(email)")
     except sqlite3.IntegrityError:
         app.logger.warning("Could not enforce unique users.email: duplicate emails exist in database/test.db.")
+    for statement in index_statements:
+        conn.execute(statement)
     conn.commit()
     conn.close()
 
@@ -404,6 +418,109 @@ def provider_past_rentals():
 def renter_only():
     return 'userid' in session and session.get('permission') == 'User (Renter)'
 
+
+def member_only():
+    """Return True for the two account types that can use Toolly messages."""
+    return session.get('permission') in ('User (Renter)', 'User (Tool Provider)') and 'userid' in session
+
+
+def open_conversation(tool_id, renter_id, provider_id):
+    """Create one conversation per renter/provider/tool combination."""
+    DATABASE.ModifyQuery(
+        "INSERT OR IGNORE INTO conversations (toolid, renterid, providerid) VALUES (?, ?, ?)",
+        (tool_id, renter_id, provider_id)
+    )
+    return DATABASE.ViewQuery(
+        "SELECT conversationid FROM conversations WHERE toolid = ? AND renterid = ? AND providerid = ?",
+        (tool_id, renter_id, provider_id)
+    )
+
+
+@app.route('/messages/start/tool/<int:tool_id>', methods=['POST'])
+def start_tool_conversation(tool_id):
+    """Let a renter contact the provider directly from a listing."""
+    if not renter_only():
+        return redirect('./')
+    tool = DATABASE.ViewQuery("SELECT providerid FROM tools WHERE toolid = ?", (tool_id,))
+    if not tool:
+        flash('That tool listing is no longer available.')
+        return redirect('/renter/browse')
+    conversation = open_conversation(tool_id, session['userid'], tool[0]['providerid'])
+    if conversation:
+        return redirect(url_for('messages', conversation=conversation[0]['conversationid']))
+    flash('Conversation could not be opened. Please try again.')
+    return redirect('/renter/browse')
+
+
+@app.route('/messages/start/rental/<int:rental_id>', methods=['POST'])
+def start_rental_conversation(rental_id):
+    """Allow either party in an active rental to contact the other."""
+    if not member_only():
+        return redirect('./')
+    rental = DATABASE.ViewQuery(
+        "SELECT toolid, renterid, providerid FROM tool_rentals WHERE rentalid = ? AND (renterid = ? OR providerid = ?)",
+        (rental_id, session['userid'], session['userid'])
+    )
+    if not rental:
+        flash('You do not have access to that rental conversation.')
+        return redirect('/home')
+    conversation = open_conversation(rental[0]['toolid'], rental[0]['renterid'], rental[0]['providerid'])
+    if conversation:
+        return redirect(url_for('messages', conversation=conversation[0]['conversationid']))
+    flash('Conversation could not be opened. Please try again.')
+    return redirect('/home')
+
+
+@app.route('/messages', methods=['GET', 'POST'])
+def messages():
+    """Show the signed-in member's conversations and save their new messages."""
+    if not member_only():
+        return redirect('./')
+
+    user_id = session['userid']
+    conversations = DATABASE.ViewQuery(
+        """SELECT conversations.*, tools.title,
+                  CASE WHEN conversations.renterid = ?
+                       THEN provider.firstname || ' ' || provider.lastname
+                       ELSE renter.firstname || ' ' || renter.lastname END AS other_member
+           FROM conversations
+           JOIN tools ON tools.toolid = conversations.toolid
+           JOIN users AS renter ON renter.userid = conversations.renterid
+           JOIN users AS provider ON provider.userid = conversations.providerid
+           WHERE conversations.renterid = ? OR conversations.providerid = ?
+           ORDER BY conversations.last_message_at DESC, conversations.conversationid DESC""",
+        (user_id, user_id, user_id)
+    ) or []
+    selected_id = request.values.get('conversation', type=int)
+    if not selected_id and conversations:
+        selected_id = conversations[0]['conversationid']
+    selected = next((item for item in conversations if item['conversationid'] == selected_id), None)
+
+    if request.method == 'POST':
+        message_text = request.form.get('message_text', '').strip()
+        if not selected:
+            flash('Choose a conversation before sending a message.')
+        elif not message_text or len(message_text) > 1000:
+            flash('Messages must be between 1 and 1,000 characters.')
+        else:
+            saved = DATABASE.ModifyMany([
+                ("INSERT INTO messages (conversationid, author, authorid, messagetext, created_at) VALUES (?, ?, ?, ?, datetime('now','localtime'))",
+                 (selected_id, user_id, user_id, message_text)),
+                ("UPDATE conversations SET last_message_at = datetime('now','localtime') WHERE conversationid = ?", (selected_id,))
+            ])
+            flash('Message sent.' if saved else 'Your message could not be sent. Please try again.')
+        return redirect(url_for('messages', conversation=selected_id) if selected_id else url_for('messages'))
+
+    chat_messages = []
+    if selected:
+        chat_messages = DATABASE.ViewQuery(
+            """SELECT messages.*, users.firstname || ' ' || users.lastname AS author_name
+               FROM messages JOIN users ON users.userid = messages.authorid
+               WHERE messages.conversationid = ? ORDER BY messages.messageid ASC""",
+            (selected_id,)
+        ) or []
+    return render_template('messages.html', conversations=conversations, selected=selected, chat_messages=chat_messages)
+
 @app.route('/renter/browse', methods=['GET', 'POST'])
 def renter_browse():
     if not renter_only():
@@ -416,6 +533,11 @@ def renter_browse():
             flash('Tool added to your wishlist.')
         elif tool and request.form.get('action') == 'rent':
             return redirect(url_for('renter_book_tool', tool_id=tool_id))
+        elif tool and request.form.get('action') == 'message':
+            conversation = open_conversation(tool_id, session['userid'], tool[0]['providerid'])
+            if conversation:
+                return redirect(url_for('messages', conversation=conversation[0]['conversationid']))
+            flash('Conversation could not be opened. Please try again.')
         return redirect('/renter/browse')
     filters = {key: request.args.get(key, '').strip() for key in ('city', 'suburb', 'tool_type', 'brand', 'tool_condition', 'available_on')}
     max_price = request.args.get('max_price', '').strip()

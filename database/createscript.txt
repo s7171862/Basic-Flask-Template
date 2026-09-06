@@ -15,14 +15,6 @@ CREATE TABLE users (
    token TEXT NULL
 );
 
-CREATE TABLE messages (
-   messageid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   messagetext TEXT NULL,
-   messageimage TEXT NULL,
-   author INTEGER NOT NULL,
-   FOREIGN KEY(author) REFERENCES users(userid) ON DELETE CASCADE
-);
-
 CREATE TABLE ratings (
    ratingid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
    rentalid INTEGER NOT NULL UNIQUE,
@@ -98,6 +90,31 @@ CREATE TABLE tool_wishlists (
    FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE
 );
 
+CREATE TABLE conversations (
+   conversationid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   toolid INTEGER NOT NULL,
+   renterid INTEGER NOT NULL,
+   providerid INTEGER NOT NULL,
+   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+   last_message_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+   UNIQUE(toolid, renterid, providerid),
+   FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE,
+   FOREIGN KEY(renterid) REFERENCES users(userid) ON DELETE CASCADE,
+   FOREIGN KEY(providerid) REFERENCES users(userid) ON DELETE CASCADE
+);
+
+CREATE TABLE messages (
+   messageid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   conversationid INTEGER NOT NULL,
+   author INTEGER NOT NULL,
+   authorid INTEGER NOT NULL,
+   messagetext TEXT NOT NULL,
+   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+   FOREIGN KEY(conversationid) REFERENCES conversations(conversationid) ON DELETE CASCADE,
+   FOREIGN KEY(author) REFERENCES users(userid) ON DELETE CASCADE,
+   FOREIGN KEY(authorid) REFERENCES users(userid) ON DELETE CASCADE
+);
+
 -- These indexes match the most common dashboard, search, and booking queries.
 CREATE INDEX idx_tools_provider ON tools(providerid);
 CREATE INDEX idx_tools_availability_dates ON tools(is_available, available_from, available_until);
@@ -109,6 +126,9 @@ CREATE INDEX idx_tool_rentals_tool_status ON tool_rentals(toolid, status);
 CREATE INDEX idx_tool_wishlists_renter ON tool_wishlists(renterid, wishlistid);
 CREATE INDEX idx_ratings_provider ON ratings(providerid, rentalid);
 CREATE INDEX idx_claims_provider_status ON claims(providerid, status);
+CREATE INDEX idx_conversations_renter ON conversations(renterid, last_message_at);
+CREATE INDEX idx_conversations_provider ON conversations(providerid, last_message_at);
+CREATE INDEX idx_messages_conversation ON messages(conversationid, messageid);
 
 INSERT INTO users (email, firstname, lastname, password, permission) values
 ('admin@admin', 'Firstname', 'Lastname', 'admin', 'admin');

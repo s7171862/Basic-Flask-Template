@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block content %}
+<main class="dashboard-page">
+    <section class="dashboard-hero">
+        <span class="dashboard-eyebrow">Toolly messages</span>
+        <h1>Messages</h1>
+        <p>Chat directly with the renter or provider about a tool and its rental.</p>
+        <a href="/home" class="btn btn-outline-primary btn-sm mt-3">Back to dashboard</a>
+    </section>
+
+    <section class="messages-layout">
+        <aside class="conversation-list" aria-label="Conversations">
+            <h2>Conversations</h2>
+            {% if conversations %}
+                {% for conversation in conversations %}
+                    <a class="conversation-link {% if selected and selected.conversationid == conversation.conversationid %}is-active{% endif %}" href="/messages?conversation={{ conversation.conversationid }}">
+                        <strong>{{ conversation.other_member }}</strong>
+                        <span>{{ conversation.title }}</span>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <p class="conversation-empty">No conversations yet. Rent a tool or use “Message provider” on a listing to begin.</p>
+            {% endif %}
+        </aside>
+
+        <section class="chat-panel">
+            {% if selected %}
+                <header class="chat-header">
+                    <div><span>About</span><h2>{{ selected.title }}</h2></div>
+                    <strong>{{ selected.other_member }}</strong>
+                </header>
+                <div class="chat-history" aria-live="polite">
+                    {% if chat_messages %}
+                        {% for message in chat_messages %}
+                            <article class="chat-message {% if message.authorid == session['userid'] %}from-me{% else %}from-them{% endif %}">
+                                <strong>{{ 'You' if message.authorid == session['userid'] else message.author_name }}</strong>
+                                <p>{{ message.messagetext }}</p>
+                                <small>{{ message.created_at }}</small>
+                            </article>
+                        {% endfor %}
+                    {% else %}
+                        <p class="chat-empty">No messages yet. Say hello and ask about the tool.</p>
+                    {% endif %}
+                </div>
+                <form method="POST" class="chat-composer">
+                    <input type="hidden" name="conversation" value="{{ selected.conversationid }}">
+                    <label class="visually-hidden" for="message_text">Your message</label>
+                    <textarea id="message_text" name="message_text" maxlength="1000" rows="3" placeholder="Write a message…" required></textarea>
+                    <div><small>Maximum 1,000 characters</small><button class="btn btn-primary">Send message</button></div>
+                </form>
+            {% else %}
+                <div class="chat-empty-state"><h2>Select a conversation</h2><p>Your chats will appear here after you contact a renter or provider.</p></div>
+            {% endif %}
+        </section>
+    </section>
+</main>
+{% endblock %}
