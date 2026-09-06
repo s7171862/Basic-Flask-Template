@@ -240,6 +240,54 @@
 
 .profile-trigger img { width: 100%; height: 100%; object-fit: cover; }
 
+.chat-dropdown {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    z-index: 1050;
+    transform: translateY(-50%);
+}
+
+.chat-dropdown.with-profile { right: 68px; }
+
+.chat-trigger {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    place-items: center;
+    border: 2px solid rgba(76, 52, 13, 0.72);
+    border-radius: 50%;
+    background: #fff9de;
+    box-shadow: 0 3px 8px rgba(92, 61, 8, 0.24);
+    color: #4d3510;
+}
+
+.chat-trigger svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.chat-trigger:hover, .chat-trigger:focus-visible { background: #f8d363; color: #3d2c10; outline: 3px solid rgba(255, 253, 236, 0.75); outline-offset: 2px; }
+
+.chat-menu {
+    width: min(390px, calc(100vw - 28px));
+    margin-top: 12px !important;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e3c66f;
+    border-radius: 16px;
+    box-shadow: 0 16px 30px rgba(74, 53, 16, 0.2);
+}
+
+.chat-tabs { padding: 10px 12px 0; border-bottom-color: #e7c468; background: #fff9e4; }
+.chat-tabs .nav-item { flex: 1; text-align: center; }
+.chat-tabs .nav-link { width: 100%; border: 0; border-bottom: 3px solid transparent; color: #725621; font-weight: 700; }
+.chat-tabs .nav-link.active { border-bottom-color: #c68b09; background: transparent; color: #3d2c10; }
+.chat-menu-intro { padding: 22px; color: #4d3510; }
+.chat-menu-intro p { margin: 7px 0 18px; color: #654e2a; line-height: 1.5; }
+.advice-bot-widget { padding: 14px; background: #fffdf6; }
+.advice-bot-widget .advice-bot-history { height: 220px; margin: 0 0 12px; padding: 12px; }
+.advice-bot-widget .advice-bot-form { align-items: stretch; }
+.advice-bot-widget .advice-bot-form .btn { flex: 0 0 auto; }
+.advice-bot-widget .advice-bot-note { margin: 10px 0 0; }
+
 .profile-menu {
     width: min(320px, calc(100vw - 28px));
     margin-top: 12px !important;
@@ -344,6 +392,7 @@
 @media (max-width: 991.98px) {
     .custom-navbar .navbar-brand { font-size: 1.55rem; }
     .profile-dropdown { right: 68px; }
+    .chat-dropdown.with-profile { right: 124px; }
     .navbar-collapse { padding-top: 12px; }
 }
 
@@ -402,7 +451,7 @@
 .profile-edit-upload img,
 .profile-edit-placeholder { width: 58px; height: 58px; flex: 0 0 58px; border: 2px solid #d9bd6c; border-radius: 50%; background: #fff; object-fit: cover; }
 
-/* Conversations and the landing-page advice helper */
+/* Conversations and Toolly Helper */
 .messages-layout { display: grid; grid-template-columns: minmax(230px, 0.7fr) minmax(0, 1.7fr); gap: 20px; }
 .conversation-list, .chat-panel, .advice-bot { border: 1px solid #e7c468; border-radius: 18px; background: #fffdf6; box-shadow: 0 10px 20px rgba(122, 92, 32, 0.06); }
 .conversation-list { padding: 18px; }

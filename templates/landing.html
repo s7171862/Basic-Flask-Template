@@ -41,25 +41,5 @@
             <li>Rating and review system for safer borrowing and lending</li>
         </ul>
     </div>
-
-    <section class="advice-bot" aria-labelledby="advice-bot-heading">
-        <div class="advice-bot-heading">
-            <span class="dashboard-eyebrow">Toolly helper</span>
-            <h2 id="advice-bot-heading">Need DIY rental advice?</h2>
-            <p>Ask Toolly Helper about renting, deposits, insurance, availability, or choosing a tool.</p>
-        </div>
-        <div class="advice-bot-history" id="advice-bot-history" aria-live="polite">
-            <div class="advice-message from-bot">Hi! I can help you understand how Toolly rentals work. What would you like to know?</div>
-        </div>
-        <form class="advice-bot-form" id="advice-bot-form">
-            <label class="visually-hidden" for="advice-bot-input">Ask Toolly Helper a question</label>
-            <input id="advice-bot-input" maxlength="300" placeholder="Example: How does the deposit work?" required>
-            <button class="btn btn-primary">Ask Toolly Helper</button>
-        </form>
-        <p class="advice-bot-note">Toolly Helper gives general project and rental advice only. Follow tool instructions and use appropriate safety equipment.</p>
-    </section>
 </div>
-{% endblock %}
-{% block scripts %}
-<script src="/static/js/advice_bot.js"></script>
 {% endblock %}

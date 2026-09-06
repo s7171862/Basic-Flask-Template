@@ -32,13 +32,50 @@
                             {% if session['permission'] == 'admin' %}
                                 <a href="/admin" class="nav-item nav-link">Admin</a>
                             {% endif %}
-                            {% if session['permission'] in ['User (Renter)', 'User (Tool Provider)'] %}
-                                <a href="/messages" class="nav-item nav-link">Messages</a>
-                            {% endif %}
                             <a href="/logout" class="nav-item nav-link">Logout</a>
                         {% endif %}
                     </div>
                 </div>
+                {% set can_message = session.get('permission') in ['User (Renter)', 'User (Tool Provider)'] %}
+                {% set can_use_helper = 'userid' not in session or session.get('permission') == 'User (Renter)' %}
+                {% if can_message or can_use_helper %}
+                    <div class="dropdown chat-dropdown {% if 'userid' in session %}with-profile{% endif %}">
+                        <button class="chat-trigger" type="button" id="chatMenu" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Open chat and Toolly Helper">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.75A2.75 2.75 0 0 1 6.75 2h10.5A2.75 2.75 0 0 1 20 4.75v7.5A2.75 2.75 0 0 1 17.25 15H10l-4.2 3.15A.5.5 0 0 1 5 17.75V15.7A2.74 2.74 0 0 1 4 13.75Z"/><path d="M8 8.5h8M8 11.5h5"/></svg>
+                            <span class="visually-hidden">Open chat</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end chat-menu" aria-labelledby="chatMenu">
+                            <ul class="nav nav-tabs chat-tabs" role="tablist">
+                                {% if can_message %}
+                                    <li class="nav-item" role="presentation"><button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages-pane" type="button" role="tab">Messages</button></li>
+                                {% endif %}
+                                {% if can_use_helper %}
+                                    <li class="nav-item" role="presentation"><button class="nav-link {% if not can_message %}active{% endif %}" id="helper-tab" data-bs-toggle="tab" data-bs-target="#helper-pane" type="button" role="tab">Toolly Helper</button></li>
+                                {% endif %}
+                            </ul>
+                            <div class="tab-content">
+                                {% if can_message %}
+                                    <div class="tab-pane fade show active" id="messages-pane" role="tabpanel" aria-labelledby="messages-tab">
+                                        <div class="chat-menu-intro"><strong>Toolly Messages</strong><p>Contact the renter or provider about a listing or rental.</p><a class="btn btn-primary btn-sm w-100" href="/messages">Open messages</a></div>
+                                    </div>
+                                {% endif %}
+                                {% if can_use_helper %}
+                                    <div class="tab-pane fade {% if not can_message %}show active{% endif %}" id="helper-pane" role="tabpanel" aria-labelledby="helper-tab">
+                                        <div class="advice-bot-widget">
+                                            <div class="advice-bot-history" id="advice-bot-history" aria-live="polite"><div class="advice-message from-bot">Hi! Describe your job and I can suggest a tool, or ask about renting with Toolly.</div></div>
+                                            <form class="advice-bot-form" id="advice-bot-form">
+                                                <label class="visually-hidden" for="advice-bot-input">Ask Toolly Helper a question</label>
+                                                <input id="advice-bot-input" maxlength="300" placeholder="Example: What tool cuts timber?" required>
+                                                <button class="btn btn-primary">Ask</button>
+                                            </form>
+                                            <p class="advice-bot-note">General advice only—always follow tool instructions and safety guidance.</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
                 {% if 'userid' in session %}
                     <div class="dropdown profile-dropdown">
                         <button class="profile-trigger" type="button" id="profileMenu" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Open profile menu">
@@ -94,6 +131,9 @@
 
     </footer>
     <script src="/static/js/new_ajax_helper.js"></script> <!-- AJAX HELPER -->
+    {% if 'userid' not in session or session.get('permission') == 'User (Renter)' %}
+        <script src="/static/js/advice_bot.js"></script>
+    {% endif %}
 
     <!-- TEMPLATES MAY ALSO HAVE THEIR OWN SCRIPTS BY INHERITTING THE TEMPLATE -->
     {% block scripts %}{% endblock %} <!-- Container for Scripts-->
