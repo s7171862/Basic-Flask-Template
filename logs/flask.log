@@ -4117,3 +4117,859 @@ Traceback (most recent call last):
                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 jinja2.exceptions.TemplateNotFound: admin.html
 INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:52:11] "GET /admin HTTP/1.1" 500 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:30] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:30] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:30] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:30] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:30] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:30] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:31] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:31] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:31] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:31] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:31] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:31] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:33] "POST /login HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:34] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:34] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:34] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:34] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:34] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:34] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:34] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:34] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:54] "GET /admin/users/9 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:54] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:54] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:54] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:54] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:55:54] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:03] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:03] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:03] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:03] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:03] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:04] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:04] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:04] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:34] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:35] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:35] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:36] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:36] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:36] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:36] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "POST /login HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Sep/2026 15:56:37] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:15:59] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:15:59] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:15:59] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:15:59] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:15:59] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:15:59] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:04] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:04] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:04] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:04] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:04] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:04] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:04] "GET /favicon.ico HTTP/1.1" 404 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:07] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:07] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:07] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:07] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:07] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:07] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "POST /login HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:08] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:17] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:17] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:17] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:17] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:17] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:17] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:17] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:19] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:19] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:19] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:19] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:19] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:19] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:23] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:23] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:23] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:23] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:23] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:23] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:23] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:23] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:26] "GET /renter/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:26] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:26] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:26] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:26] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:26] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:26] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:28] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:28] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:29] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:29] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:29] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:29] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:29] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:30] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:30] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:30] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:30] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:30] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:30] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:30] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:33] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:33] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:33] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:33] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:33] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:33] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:35] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:35] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:35] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:35] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:35] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:35] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:35] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:38] "GET /provider/claims HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:38] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:38] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:38] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:38] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:38] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:39] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:39] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:39] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:39] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:39] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:39] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:41] "GET /provider/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:41] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:41] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:41] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:41] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:41] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:43] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:43] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:43] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:43] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:43] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:43] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:46] "GET /provider/active-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:46] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:46] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:46] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:46] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:46] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:47] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:47] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:47] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:47] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:47] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:47] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:48] "GET /provider/earnings HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:48] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:48] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:48] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:48] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:48] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:50] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:50] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:50] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:50] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:50] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:50] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:51] "GET /provider/claims HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:51] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:51] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:51] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:51] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:51] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:53] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:53] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:53] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:53] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:53] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:53] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:54] "GET /provider/listings HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:54] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:54] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:54] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:54] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:54] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:54] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:57] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:57] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:57] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:57] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:57] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:16:57] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:00] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:00] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:00] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:00] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:00] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:00] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:04] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:04] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:04] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:04] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:04] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:04] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:06] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:06] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:06] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:06] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:06] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:06] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:09] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:09] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:09] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:09] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:09] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:09] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:09] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:12] "GET /provider/listings HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:12] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:12] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:12] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:12] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:12] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:12] "GET /toolphotos/tool_9_6527e9b8c3454d7f87c775f4e9aa5539.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:12] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:33] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:33] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:33] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:33] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:33] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:33] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:33] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:37] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:37] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:37] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:37] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:37] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:37] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:39] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:39] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:39] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:39] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:39] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:39] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:39] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:39] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /renter/browse HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /toolphotos/tool_9_6527e9b8c3454d7f87c775f4e9aa5539.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:42] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "POST /renter/browse HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "GET /renter/tools/4/book HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:23:52] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:02] "POST /renter/tools/4/book HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:02] "GET /renter/rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:02] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:02] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:02] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:02] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:02] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:02] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:08] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:08] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:08] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:08] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:08] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:08] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:08] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:09] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:09] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:09] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:09] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:09] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:09] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:11] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:11] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:11] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:11] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:11] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:11] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:11] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:14] "GET /provider/active-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:14] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:14] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:14] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:14] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:14] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:16] "POST /provider/active-rentals HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:16] "GET /provider/active-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:16] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:16] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:16] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:16] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:16] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:17] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:17] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:17] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:17] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:17] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:17] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:19] "GET /provider/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:19] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:19] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:19] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:19] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:19] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+ERROR:app:Database write failed: FOREIGN KEY constraint failed | SQL: INSERT INTO claims (rentalid, providerid, description, evidence_photo, claim_charge)
+                       VALUES (?, ?, ?, ?, ?)
+Traceback (most recent call last):
+  File "C:\Users\George Schmidt\Desktop\Basic-Flask-Template\interfaces\databaseinterface.py", line 49, in ModifyQuery
+    connection.execute(query, params or ())
+sqlite3.IntegrityError: FOREIGN KEY constraint failed
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:30] "POST /provider/past-rentals HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:30] "GET /provider/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:30] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:30] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:30] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:30] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:30] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+ERROR:app:Database write failed: FOREIGN KEY constraint failed | SQL: INSERT INTO claims (rentalid, providerid, description, evidence_photo, claim_charge)
+                       VALUES (?, ?, ?, ?, ?)
+Traceback (most recent call last):
+  File "C:\Users\George Schmidt\Desktop\Basic-Flask-Template\interfaces\databaseinterface.py", line 49, in ModifyQuery
+    connection.execute(query, params or ())
+sqlite3.IntegrityError: FOREIGN KEY constraint failed
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:49] "POST /provider/past-rentals HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:49] "GET /provider/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:49] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:49] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:49] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:49] "GET /static/js/new_ajax_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 17:24:49] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Rebuilt legacy claims table to link to tool_rentals.
+INFO:app:Rebuilt legacy messages table using the simplified design.
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Register Renter
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Register Renter
+INFO:app:Home
+INFO:app:Home
+INFO:app:Admin
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Register Renter
+INFO:app:Home
+INFO:app:Home
+INFO:app:Admin
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Register Renter
+INFO:app:Home
+INFO:app:Home
+INFO:app:Admin
+INFO:werkzeug:WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://10.0.0.59:5000
+INFO:werkzeug:Press CTRL+C to quit
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:19] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:19] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:19] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:19] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:19] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:22] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:22] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:22] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:22] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:22] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:23] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:23] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:23] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:23] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:23] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:23] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:23] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:25] "GET /renter/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:25] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:25] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:25] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:25] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:25] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:37] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:37] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:37] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:37] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:37] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:37] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:38] "GET /messages HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:38] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:38] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:38] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:38] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:38] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:50] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:50] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:50] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:50] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:50] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:11:51] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:04] "GET /renter/rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:04] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:04] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:04] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:04] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:04] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:05] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:05] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:05] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:05] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:05] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:05] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:06] "GET /renter/browse HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:06] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:06] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:06] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:06] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:06] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:06] "GET /toolphotos/tool_9_6527e9b8c3454d7f87c775f4e9aa5539.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:06] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:11] "POST /renter/browse HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:11] "GET /renter/tools/3/book HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:11] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:11] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:11] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:11] "GET /toolphotos/tool_9_6527e9b8c3454d7f87c775f4e9aa5539.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:11] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:12:11] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:21] "GET /renter/browse HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:21] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:21] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:21] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:21] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:21] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:21] "GET /toolphotos/tool_9_6527e9b8c3454d7f87c775f4e9aa5539.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:21] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:29] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:29] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:29] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:29] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:29] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:29] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:30] "GET /renter/wishlist HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:30] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:30] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:30] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:30] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:30] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /renter/browse HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /toolphotos/tool_9_6527e9b8c3454d7f87c775f4e9aa5539.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:32] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "POST /renter/browse HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "GET /renter/browse HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "GET /toolphotos/tool_9_6527e9b8c3454d7f87c775f4e9aa5539.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:35] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:36] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:36] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:36] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:36] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:36] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:36] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:37] "GET /renter/wishlist HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:37] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:37] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:37] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:37] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:37] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:39] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:39] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:39] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:39] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:39] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:39] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:41] "GET /renter/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:41] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:41] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:41] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:41] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:13:41] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:49] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:49] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:49] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:49] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:49] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:49] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:52] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:52] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:52] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:52] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:52] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:52] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:54] "GET /begin-registration/renter HTTP/1.1" 302 -
+INFO:app:Register Renter
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:54] "GET /register/renter?access=1 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:54] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:54] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:54] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:54] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:56] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:56] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:56] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:56] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:14:57] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:00] "POST /login HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:00] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:00] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:00] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:00] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:00] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:00] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:00] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:28] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:28] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:28] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:28] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:28] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:28] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:29] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:29] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:29] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:29] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:29] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:33] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:33] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:33] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:33] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:33] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:33] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:36] "GET /provider/claims HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:36] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:36] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:36] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:36] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:38] "GET /provider/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:38] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:38] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:38] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:38] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:44] "POST /provider/past-rentals HTTP/1.1" 302 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:44] "GET /provider/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:44] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:44] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:44] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:44] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:47] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:47] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:47] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:47] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:47] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:48] "GET /provider/claims HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:49] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:49] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:49] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:49] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:49] "GET /claimphotos/claim_8_0530822881a248669c57aae46adf3814.png HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:52] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:52] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:52] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:52] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:52] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:53] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:53] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:53] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:53] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:53] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:53] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:54] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:54] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:54] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:54] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:54] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "POST /login HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "GET /claimphotos/claim_8_0530822881a248669c57aae46adf3814.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:15:56] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "POST /admin HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:00] "GET /claimphotos/claim_8_0530822881a248669c57aae46adf3814.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:14] "POST /admin HTTP/1.1" 302 -
+INFO:app:Admin
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:14] "GET /admin HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:14] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:14] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:14] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:14] "GET /profilephotos/DROPS2.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:14] "GET /profilephotos/Screenshot_2026-08-12_202651.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:14] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Log out
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:20] "GET /logout HTTP/1.1" 302 -
+INFO:app:Landing page
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:20] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:20] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:20] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:20] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:20] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:21] "GET /login HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:21] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:21] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:21] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:21] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Login
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:23] "POST /login HTTP/1.1" 302 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:23] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:23] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:23] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:23] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:23] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:23] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:25] "GET /renter/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:25] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:25] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:25] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:25] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:25] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:28] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:28] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:28] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:28] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:28] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:28] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:40] "GET /renter/rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:40] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:40] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:40] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:40] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:40] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:41] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:41] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:41] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:41] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:41] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:41] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:43] "GET /renter/browse HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:43] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:43] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:43] "GET /toolphotos/tool_8_1c7012a528cd4f3f8b0cdf359b57f971.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:43] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:43] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:43] "GET /toolphotos/tool_9_6527e9b8c3454d7f87c775f4e9aa5539.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:43] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:46] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:46] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:46] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:46] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:46] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:46] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:47] "GET /renter/past-rentals HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:47] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:47] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:47] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:47] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:47] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Home
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:54] "GET /home HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:54] "GET /static/css/custom.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:54] "GET /profilephotos/DROPS1.png HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:54] "GET /static/js/advice_bot.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:54] "GET /static/js/queensland_locations.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [12/Sep/2026 18:16:54] "GET /static/js/tool_value_helper.js HTTP/1.1" 200 -
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Register Renter
+INFO:app:Home
+INFO:app:Home
+INFO:app:Admin
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Register Renter
+INFO:app:Home
+INFO:app:Home
+INFO:app:Admin
+ERROR:app:Database write failed: NOT NULL constraint failed: tools.location | SQL: INSERT INTO tools (providerid, title, description, daily_rate, original_value, city, suburb, tool_type, brand, tool_condition, toolphoto, available_from, available_until)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Traceback (most recent call last):
+  File "C:\Users\George Schmidt\Desktop\Basic-Flask-Template\interfaces\databaseinterface.py", line 49, in ModifyQuery
+    connection.execute(query, params or ())
+sqlite3.IntegrityError: NOT NULL constraint failed: tools.location
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Register Renter
+INFO:app:Home
+INFO:app:Home
+INFO:app:Admin
+INFO:app:Landing page
+INFO:app:Login
+INFO:app:Register Renter
+INFO:app:Home
+INFO:app:Home
+INFO:app:Admin

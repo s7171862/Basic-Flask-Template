@@ -512,13 +512,31 @@
 .admin-claim-list strong { color: #4d3510; }
 .admin-claim-list span, .admin-claim-list small { color: #715831; font-size: 0.82rem; }
 .admin-claim-list p { margin: 8px 0; color: #4f3a20; overflow-wrap: anywhere; }
+.claim-evidence-thumb { display: block; width: 100%; max-height: 190px; margin: 0 0 12px; border: 1px solid #d9bd6c; border-radius: 9px; object-fit: cover; }
+.claim-details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; }
+.claim-details div { padding: 7px; border-radius: 8px; background: #fff7d9; }
+.claim-details dt { color: #715831; font-size: 0.72rem; text-transform: uppercase; }
+.claim-details dd { margin: 2px 0 0; color: #4d3510; font-weight: 800; }
 .admin-edit-card { max-width: 760px; }
-.claim-status-form { display: flex; gap: 8px; align-items: center; margin: 10px 0; }
-.claim-status-form .form-select { width: auto; min-width: 118px; }
+.claim-status-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 10px 0; }
 
 .rental-review { max-width: 700px; margin-top: 18px; padding: 16px; border: 1px solid #ead58e; border-radius: 13px; background: #fff9e5; }
 .rental-review h4 { margin: 0 0 10px; color: #4d3510; font-size: 1rem; font-weight: 800; }
 .review-saved { margin-bottom: 12px !important; color: #674710 !important; }
+
+.provider-claims-list { display: grid; gap: 16px; }
+.provider-claim-card { display: grid; grid-template-columns: minmax(160px, 240px) 1fr; gap: 18px; padding: 18px; border: 1px solid #ead58e; border-radius: 14px; background: #fffefa; }
+.provider-claim-card > img { width: 100%; height: 180px; border-radius: 10px; object-fit: cover; }
+.provider-claim-card h2 { margin: 8px 0; color: #4d3510; font-size: 1.25rem; font-weight: 800; }
+.provider-claim-card p { color: #5f4827; }
+.provider-claim-card dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 12px 0; }
+.provider-claim-card dl div { padding: 8px; border-radius: 8px; background: #fff7d9; }
+.provider-claim-card dt { color: #715831; font-size: 0.72rem; text-transform: uppercase; }
+.provider-claim-card dd { margin: 3px 0 0; color: #4d3510; font-weight: 700; }
+.claim-status { display: inline-block; padding: 4px 9px; border-radius: 999px; background: #fff1bd; color: #674710; font-size: 0.8rem; font-weight: 800; }
+.claim-status-accepted, .claim-decision.accepted { background: #dff3e3; color: #17602a; }
+.claim-status-denied, .claim-decision.denied { background: #fde1df; color: #9f2920; }
+.claim-decision { padding: 9px; border-radius: 8px; background: #fff1bd; color: #674710 !important; font-weight: 600; }
 
 @media (max-width: 767.98px) {
     .messages-layout { grid-template-columns: 1fr; }
@@ -527,6 +545,9 @@
     .advice-bot-form { flex-direction: column; }
     .chat-header { align-items: flex-start; flex-direction: column; }
     .admin-stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .provider-claim-card { grid-template-columns: 1fr; }
+    .provider-claim-card > img { max-width: 280px; }
+    .provider-claim-card dl { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 420px) {

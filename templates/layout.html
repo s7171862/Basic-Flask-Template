@@ -10,7 +10,6 @@
     {% block styles %}{% endblock %} <!-- insert any custom css -->
 
     <!-- Javascript Links -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script> <!-- AJAX -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> <!-- BOOTSTRAP -->
     <script src="/static/js/queensland_locations.js" defer></script>
     <script src="/static/js/tool_value_helper.js" defer></script>
@@ -130,7 +129,6 @@
         </div>
 
     </footer>
-    <script src="/static/js/new_ajax_helper.js"></script> <!-- AJAX HELPER -->
     {% if 'userid' not in session or session.get('permission') == 'User (Renter)' %}
         <script src="/static/js/advice_bot.js"></script>
     {% endif %}

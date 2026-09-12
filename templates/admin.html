@@ -1,47 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
 <main class="dashboard-page admin-page">
-    <section class="dashboard-hero">
-        <span class="dashboard-eyebrow">Administrator workspace</span>
-        <h1>Toolly Admin</h1>
-        <p>Review marketplace activity, manage member accounts, and keep track of rentals and claims.</p>
-    </section>
+    <section class="dashboard-hero"><span class="dashboard-eyebrow">Administrator workspace</span><h1>Toolly Admin</h1><p>Review marketplace activity, manage member accounts, rentals, and evidence-supported claims.</p></section>
 
     <section class="admin-stat-grid" aria-label="Marketplace summary">
         <article><span>Accounts</span><strong>{{ summary.users_count }}</strong><small>{{ summary.renters_count }} renters · {{ summary.providers_count }} providers</small></article>
         <article><span>Tools</span><strong>{{ summary.tools_count }}</strong><small>{{ summary.available_tools_count }} available now</small></article>
         <article><span>Active rentals</span><strong>{{ summary.active_rentals_count }}</strong><small>{{ summary.completed_rentals_count }} completed</small></article>
-        <article><span>Open claims</span><strong>{{ summary.open_claims_count }}</strong><small>{{ summary.conversations_count }} conversations</small></article>
+        <article><span>Active claims</span><strong>{{ summary.open_claims_count }}</strong><small>Awaiting a decision</small></article>
     </section>
 
     <section class="workspace-panel admin-table-panel">
         <div class="workspace-panel-heading"><div><h2>Member accounts</h2><p class="admin-panel-copy">Passwords, session tokens, and private data are intentionally hidden.</p></div></div>
-        {% if results %}
-            <form method="POST" onsubmit="return confirm('Delete the selected accounts? This cannot be undone.');">
-                <div class="table-responsive"><table class="table admin-table align-middle">
-                    <thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Marketplace activity</th><th>Last access</th><th>Manage</th><th>Delete</th></tr></thead>
-                    <tbody>{% for user in results %}<tr>
-                        <td><div class="admin-member">{% if user.profilephoto %}<img src="/{{ user.profilephoto }}" alt="">{% else %}<span>{{ user.firstname[0] }}{{ user.lastname[0] }}</span>{% endif %}<div><strong>{{ user.firstname }} {{ user.lastname }}</strong><small>#{{ user.userid }} · {{ user.email }}</small></div></div></td>
-                        <td><span class="admin-role">{{ user.permission }}</span></td>
-                        <td>{{ user.status or 'Active' }}</td>
-                        <td>{% if user.permission == 'User (Tool Provider)' %}{{ user.listing_count }} listings · {{ user.provider_rental_count }} rentals{% elif user.permission == 'User (Renter)' %}{{ user.renter_rental_count }} rentals{% else %}Administrator{% endif %}</td>
-                        <td>{{ user.lastaccess }}</td>
-                        <td><a class="btn btn-outline-primary btn-sm" href="/admin/users/{{ user.userid }}">View / update</a></td>
-                        <td>{% if user.userid != session['userid'] %}<input class="form-check-input" type="checkbox" name="selectedusers" value="{{ user.userid }}" aria-label="Delete {{ user.firstname }} {{ user.lastname }}">{% else %}<small>Your account</small>{% endif %}</td>
-                    </tr>{% endfor %}</tbody>
-                </table></div>
-                <button class="btn btn-outline-danger btn-sm">Delete selected accounts</button>
-            </form>
-        {% else %}<p>No member accounts were found.</p>{% endif %}
+        {% if results %}<form method="POST" onsubmit="return confirm('Delete the selected accounts? This cannot be undone.');"><div class="table-responsive"><table class="table admin-table align-middle"><thead><tr><th>Member</th><th>Role</th><th>Status</th><th>Marketplace activity</th><th>Last access</th><th>Manage</th><th>Delete</th></tr></thead><tbody>{% for user in results %}<tr>
+            <td><div class="admin-member">{% if user.profilephoto %}<img src="/{{ user.profilephoto }}" alt="">{% else %}<span>{{ user.firstname[0] }}{{ user.lastname[0] }}</span>{% endif %}<div><strong>{{ user.firstname }} {{ user.lastname }}</strong><small>#{{ user.userid }} · {{ user.email }}</small></div></div></td>
+            <td><span class="admin-role">{{ user.permission }}</span></td><td>{{ user.status or 'Active' }}</td>
+            <td>{% if user.permission == 'User (Tool Provider)' %}{{ user.listing_count }} listings · {{ user.provider_rental_count }} rentals{% elif user.permission == 'User (Renter)' %}{{ user.renter_rental_count }} rentals{% else %}Administrator{% endif %}</td>
+            <td>{{ user.lastaccess }}</td><td><a class="btn btn-outline-primary btn-sm" href="/admin/users/{{ user.userid }}">View / update</a></td>
+            <td>{% if user.userid != session['userid'] %}<input class="form-check-input" type="checkbox" name="selectedusers" value="{{ user.userid }}" aria-label="Delete {{ user.firstname }} {{ user.lastname }}">{% else %}<small>Your account</small>{% endif %}</td>
+        </tr>{% endfor %}</tbody></table></div><button class="btn btn-outline-danger btn-sm">Delete selected accounts</button></form>{% else %}<p>No member accounts were found.</p>{% endif %}
     </section>
 
     <div class="row g-4">
         <div class="col-lg-7"><section class="workspace-panel admin-table-panel h-100"><h2>Active rentals</h2>{% if active_rentals %}<div class="table-responsive"><table class="table admin-table"><thead><tr><th>Tool</th><th>Renter</th><th>Provider</th><th>Dates</th><th>Total</th></tr></thead><tbody>{% for rental in active_rentals %}<tr><td>{{ rental.title }} <small>#{{ rental.rentalid }}</small></td><td>{{ rental.renter_name }}</td><td>{{ rental.provider_name }}</td><td>{{ rental.start_date }} to {{ rental.end_date }}</td><td>${{ '%.2f'|format(rental.total) }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p>No active rentals right now.</p>{% endif %}</section></div>
-<<<<<<< ours
-        <div class="col-lg-5"><section class="workspace-panel admin-table-panel h-100"><h2>Open claims</h2>{% if open_claims %}<div class="admin-claim-list">{% for claim in open_claims %}<article><strong>{{ claim.title }}</strong><span>Provider: {{ claim.provider_name }}</span><p>{{ claim.description }}</p><small>Claim #{{ claim.claimid }} · {{ claim.created_at }}</small></article>{% endfor %}</div>{% else %}<p>No open claims right now.</p>{% endif %}</section></div>
-=======
-        <div class="col-lg-5"><section class="workspace-panel admin-table-panel h-100"><h2>Open claims</h2>{% if open_claims %}<div class="admin-claim-list">{% for claim in open_claims %}<article><strong>{{ claim.title }}</strong><span>Provider: {{ claim.provider_name }}</span><p>{{ claim.description }}</p><form method="POST" class="claim-status-form"><input type="hidden" name="action" value="update_claim"><input type="hidden" name="claimid" value="{{ claim.claimid }}"><select class="form-select form-select-sm" name="claim_status" aria-label="Claim {{ claim.claimid }} status">{% for status in ['open', 'reviewing', 'resolved', 'rejected'] %}<option value="{{ status }}" {% if claim.status == status %}selected{% endif %}>{{ status|capitalize }}</option>{% endfor %}</select><button class="btn btn-outline-primary btn-sm">Update</button></form><small>Claim #{{ claim.claimid }} · {{ claim.created_at }}</small></article>{% endfor %}</div>{% else %}<p>No open claims right now.</p>{% endif %}</section></div>
->>>>>>> theirs
+        <div class="col-lg-5"><section class="workspace-panel admin-table-panel h-100"><h2>Claims awaiting decision</h2>{% if open_claims %}<div class="admin-claim-list">{% for claim in open_claims %}<article>
+            {% if claim.evidence_photo %}<a href="/{{ claim.evidence_photo }}" target="_blank" rel="noopener"><img class="claim-evidence-thumb" src="/{{ claim.evidence_photo }}" alt="Supporting photo for claim {{ claim.claimid }}"></a>{% endif %}
+            <strong>{{ claim.title }}</strong><span>Provider: {{ claim.provider_name }} · Renter: {{ claim.renter_name }}</span><p>{{ claim.description }}</p>
+            <dl class="claim-details"><div><dt>Insurance</dt><dd>{{ 'Selected — $0 charge' if claim.insurance_selected else 'Not selected' }}</dd></div><div><dt>Calculated charge</dt><dd>${{ '%.2f'|format(claim.claim_charge) }}</dd></div></dl>
+            <form method="POST" class="claim-status-form"><input type="hidden" name="action" value="update_claim"><input type="hidden" name="claimid" value="{{ claim.claimid }}"><button class="btn btn-outline-primary btn-sm" name="claim_status" value="reviewing">Reviewing</button><button class="btn btn-primary btn-sm" name="claim_status" value="accepted">Accept</button><button class="btn btn-outline-danger btn-sm" name="claim_status" value="denied">Deny</button></form>
+            <small>Claim #{{ claim.claimid }} · {{ claim.created_at }}</small>
+        </article>{% endfor %}</div>{% else %}<p>No claims need a decision right now.</p>{% endif %}</section></div>
     </div>
 </main>
 {% endblock %}

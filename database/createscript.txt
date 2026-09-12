@@ -1,159 +1,113 @@
--- SCHEMA MAINTENANCE NOTE:
--- When this file changes, update app.py:migrate_database() in the same change.
--- This file creates new databases; migrate_database() preserves existing data.
+-- Toolly database (Year 11 version)
+-- One table per main feature: accounts, listings, bookings, wishlists,
+-- reviews, claims, and messages.
 
 CREATE TABLE users (
-   userid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   firstname TEXT NOT NULL,
-   lastname TEXT NOT NULL,
-   password TEXT NOT NULL,
-   email TEXT NOT NULL UNIQUE,
-   permission TEXT NOT NULL DEFAULT 'user' CHECK (permission in ('user','admin','User (Renter)','User (Tool Provider)')),
-   lastaccess DATE NOT NULL DEFAULT (datetime('now','localtime')),
-   status TEXT NULL,
-   profilephoto TEXT NULL,
-   token TEXT NULL
-);
-
-CREATE TABLE ratings (
-   ratingid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   rentalid INTEGER NOT NULL UNIQUE,
-   providerid INTEGER NOT NULL,
-   renterid INTEGER NOT NULL,
-   rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
-   comment TEXT NULL,
-   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid),
-   FOREIGN KEY(providerid) REFERENCES users(userid),
-   FOREIGN KEY(renterid) REFERENCES users(userid)
-);
-
-CREATE TABLE claims (
-   claimid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   rentalid INTEGER NOT NULL,
-   providerid INTEGER NOT NULL,
-   description TEXT NOT NULL,
-   evidence_photo TEXT NOT NULL,
-   claim_charge REAL NOT NULL DEFAULT 0 CHECK (claim_charge >= 0),
-   status TEXT NOT NULL DEFAULT 'open',
-   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
-   reviewed_at DATE NULL,
-   reviewed_by INTEGER NULL,
-   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid),
-   FOREIGN KEY(providerid) REFERENCES users(userid),
-   FOREIGN KEY(reviewed_by) REFERENCES users(userid)
+    userid INTEGER PRIMARY KEY AUTOINCREMENT,
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    permission TEXT NOT NULL CHECK (permission IN ('admin', 'User (Renter)', 'User (Tool Provider)')),
+    lastaccess DATE NOT NULL DEFAULT (datetime('now','localtime')),
+    status TEXT,
+    profilephoto TEXT
 );
 
 CREATE TABLE tools (
-   toolid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   providerid INTEGER NOT NULL,
-   title TEXT NOT NULL,
-   description TEXT NOT NULL,
-   daily_rate REAL NOT NULL CHECK (daily_rate > 0),
-   original_value REAL NOT NULL CHECK (original_value > 0),
-   city TEXT NOT NULL,
-   suburb TEXT NOT NULL,
-   tool_type TEXT NOT NULL,
-   brand TEXT NOT NULL,
-   tool_condition TEXT NOT NULL,
-   toolphoto TEXT NOT NULL,
-   available_from DATE NOT NULL,
-   available_until DATE NOT NULL,
-   is_available INTEGER NOT NULL DEFAULT 1 CHECK (is_available IN (0, 1)),
-   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
-   CHECK (available_until >= available_from),
-   FOREIGN KEY(providerid) REFERENCES users(userid) ON DELETE CASCADE
+    toolid INTEGER PRIMARY KEY AUTOINCREMENT,
+    providerid INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    daily_rate REAL NOT NULL CHECK (daily_rate > 0),
+    original_value REAL NOT NULL CHECK (original_value > 0),
+    city TEXT NOT NULL,
+    suburb TEXT NOT NULL,
+    location TEXT NOT NULL,
+    tool_type TEXT NOT NULL,
+    brand TEXT NOT NULL,
+    tool_condition TEXT NOT NULL,
+    toolphoto TEXT NOT NULL,
+    available_from DATE NOT NULL,
+    available_until DATE NOT NULL,
+    is_available INTEGER NOT NULL DEFAULT 1 CHECK (is_available IN (0, 1)),
+    created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+    FOREIGN KEY (providerid) REFERENCES users(userid)
 );
 
 CREATE TABLE tool_rentals (
-   rentalid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   toolid INTEGER NOT NULL,
-   renterid INTEGER NOT NULL,
-   providerid INTEGER NOT NULL,
-   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed')),
-   total REAL NOT NULL CHECK (total >= 0),
-   start_date DATE NOT NULL,
-   end_date DATE NOT NULL,
-   rental_days INTEGER NOT NULL CHECK (rental_days > 0),
-   rental_cost REAL NOT NULL CHECK (rental_cost >= 0),
-   security_deposit REAL NOT NULL CHECK (security_deposit >= 0),
-   insurance_selected INTEGER NOT NULL DEFAULT 0 CHECK (insurance_selected IN (0, 1)),
-   insurance_cost REAL NOT NULL DEFAULT 0 CHECK (insurance_cost >= 0),
-   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
-   completed_at DATE NULL,
-   CHECK (end_date >= start_date),
-   FOREIGN KEY(toolid) REFERENCES tools(toolid),
-   FOREIGN KEY(renterid) REFERENCES users(userid),
-   FOREIGN KEY(providerid) REFERENCES users(userid)
+    rentalid INTEGER PRIMARY KEY AUTOINCREMENT,
+    toolid INTEGER NOT NULL,
+    renterid INTEGER NOT NULL,
+    providerid INTEGER NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    rental_days INTEGER NOT NULL,
+    rental_cost REAL NOT NULL,
+    security_deposit REAL NOT NULL,
+    insurance_selected INTEGER NOT NULL DEFAULT 0,
+    insurance_cost REAL NOT NULL DEFAULT 0,
+    total REAL NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed')),
+    created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+    completed_at DATE,
+    FOREIGN KEY (toolid) REFERENCES tools(toolid),
+    FOREIGN KEY (renterid) REFERENCES users(userid),
+    FOREIGN KEY (providerid) REFERENCES users(userid)
 );
 
 CREATE TABLE tool_wishlists (
-   wishlistid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   renterid INTEGER NOT NULL,
-   toolid INTEGER NOT NULL,
-   UNIQUE(renterid, toolid),
-   FOREIGN KEY(renterid) REFERENCES users(userid) ON DELETE CASCADE,
-   FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE
+    wishlistid INTEGER PRIMARY KEY AUTOINCREMENT,
+    renterid INTEGER NOT NULL,
+    toolid INTEGER NOT NULL,
+    UNIQUE (renterid, toolid),
+    FOREIGN KEY (renterid) REFERENCES users(userid),
+    FOREIGN KEY (toolid) REFERENCES tools(toolid)
 );
 
--- Renter feedback is separate from provider-to-renter ratings so both sides
--- can leave one review for the same completed rental.
-CREATE TABLE renter_reviews (
-   reviewid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   rentalid INTEGER NOT NULL UNIQUE,
-   toolid INTEGER NOT NULL,
-   providerid INTEGER NOT NULL,
-   renterid INTEGER NOT NULL,
-   rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
-   comment TEXT NULL,
-   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
-   FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid) ON DELETE CASCADE,
-   FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE,
-   FOREIGN KEY(providerid) REFERENCES users(userid) ON DELETE CASCADE,
-   FOREIGN KEY(renterid) REFERENCES users(userid) ON DELETE CASCADE
+CREATE TABLE reviews (
+    reviewid INTEGER PRIMARY KEY AUTOINCREMENT,
+    rentalid INTEGER NOT NULL,
+    authorid INTEGER NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT,
+    created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+    UNIQUE (rentalid, authorid),
+    FOREIGN KEY (rentalid) REFERENCES tool_rentals(rentalid),
+    FOREIGN KEY (authorid) REFERENCES users(userid)
 );
 
-CREATE TABLE conversations (
-   conversationid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   toolid INTEGER NOT NULL,
-   renterid INTEGER NOT NULL,
-   providerid INTEGER NOT NULL,
-   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
-   last_message_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
-   UNIQUE(toolid, renterid, providerid),
-   FOREIGN KEY(toolid) REFERENCES tools(toolid) ON DELETE CASCADE,
-   FOREIGN KEY(renterid) REFERENCES users(userid) ON DELETE CASCADE,
-   FOREIGN KEY(providerid) REFERENCES users(userid) ON DELETE CASCADE
+CREATE TABLE claims (
+    claimid INTEGER PRIMARY KEY AUTOINCREMENT,
+    rentalid INTEGER NOT NULL,
+    providerid INTEGER NOT NULL,
+    description TEXT NOT NULL,
+    evidence_photo TEXT NOT NULL,
+    claim_charge REAL NOT NULL DEFAULT 0,
+    status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'reviewing', 'accepted', 'denied')),
+    created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+    reviewed_at DATE,
+    FOREIGN KEY (rentalid) REFERENCES tool_rentals(rentalid),
+    FOREIGN KEY (providerid) REFERENCES users(userid)
 );
 
 CREATE TABLE messages (
-   messageid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-   conversationid INTEGER NOT NULL,
-   author INTEGER NOT NULL,
-   authorid INTEGER NOT NULL,
-   messagetext TEXT NOT NULL,
-   created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
-   FOREIGN KEY(conversationid) REFERENCES conversations(conversationid) ON DELETE CASCADE,
-   FOREIGN KEY(author) REFERENCES users(userid) ON DELETE CASCADE,
-   FOREIGN KEY(authorid) REFERENCES users(userid) ON DELETE CASCADE
+    messageid INTEGER PRIMARY KEY AUTOINCREMENT,
+    toolid INTEGER NOT NULL,
+    senderid INTEGER NOT NULL,
+    recipientid INTEGER NOT NULL,
+    messagetext TEXT NOT NULL,
+    created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+    FOREIGN KEY (toolid) REFERENCES tools(toolid),
+    FOREIGN KEY (senderid) REFERENCES users(userid),
+    FOREIGN KEY (recipientid) REFERENCES users(userid)
 );
 
--- These indexes match the most common dashboard, search, and booking queries.
-CREATE INDEX idx_tools_provider ON tools(providerid);
-CREATE INDEX idx_tools_availability_dates ON tools(is_available, available_from, available_until);
-CREATE INDEX idx_tools_location ON tools(city, suburb);
-CREATE INDEX idx_tools_filters ON tools(tool_type, brand, tool_condition, daily_rate);
-CREATE INDEX idx_tool_rentals_provider_status ON tool_rentals(providerid, status, completed_at);
-CREATE INDEX idx_tool_rentals_renter_status ON tool_rentals(renterid, status, completed_at);
-CREATE INDEX idx_tool_rentals_tool_status ON tool_rentals(toolid, status);
-CREATE INDEX idx_tool_wishlists_renter ON tool_wishlists(renterid, wishlistid);
-CREATE INDEX idx_ratings_provider ON ratings(providerid, rentalid);
-CREATE INDEX idx_claims_provider_status ON claims(providerid, status);
-CREATE INDEX idx_claims_rental_status ON claims(rentalid, status);
-CREATE INDEX idx_renter_reviews_provider ON renter_reviews(providerid, rating);
-CREATE INDEX idx_renter_reviews_tool ON renter_reviews(toolid, rating);
-CREATE INDEX idx_conversations_renter ON conversations(renterid, last_message_at);
-CREATE INDEX idx_conversations_provider ON conversations(providerid, last_message_at);
-CREATE INDEX idx_messages_conversation ON messages(conversationid, messageid);
+CREATE INDEX idx_tools_search ON tools(city, suburb, is_available);
+CREATE INDEX idx_rentals_renter ON tool_rentals(renterid, status);
+CREATE INDEX idx_rentals_provider ON tool_rentals(providerid, status);
+CREATE INDEX idx_claims_provider ON claims(providerid, status);
+CREATE INDEX idx_messages_user ON messages(recipientid, senderid);
 
-INSERT INTO users (email, firstname, lastname, password, permission) values
-('admin@admin', 'Firstname', 'Lastname', 'admin', 'admin');
+INSERT INTO users (email, firstname, lastname, password, permission)
+VALUES ('admin@admin', 'Firstname', 'Lastname', 'admin', 'admin');

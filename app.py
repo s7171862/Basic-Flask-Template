@@ -170,7 +170,6 @@ def migrate_database():
     if 'suburb' not in tool_columns:
         conn.execute("ALTER TABLE tools ADD COLUMN suburb TEXT NOT NULL DEFAULT ''")
     if 'location' not in tool_columns:
-        # Kept for compatibility with earlier local database versions.
         conn.execute("ALTER TABLE tools ADD COLUMN location TEXT NOT NULL DEFAULT ''")
     if 'original_value' not in tool_columns:
         conn.execute("ALTER TABLE tools ADD COLUMN original_value REAL NOT NULL DEFAULT 0")
@@ -187,25 +186,121 @@ def migrate_database():
     for column, definition in {
         'evidence_photo': "TEXT NOT NULL DEFAULT ''",
         'claim_charge': 'REAL NOT NULL DEFAULT 0',
-        'reviewed_at': 'DATE NULL',
-        'reviewed_by': 'INTEGER NULL'
+        'reviewed_at': 'DATE NULL'
     }.items():
         if column not in claim_columns:
             conn.execute(f"ALTER TABLE claims ADD COLUMN {column} {definition}")
-    message_columns = {column[1] for column in conn.execute("PRAGMA table_info(messages)").fetchall()}
+
+    # An earlier version of the project linked claims to the old ``rentals``
+    # table.  The website now uses ``tool_rentals``.  SQLite cannot change a
+    # foreign key with ALTER TABLE, so rebuild this small table once when an
+    # older database is opened.  Only claims whose rental and provider still
+    # exist are copied across; invalid legacy records cannot be used anyway.
+    claim_foreign_keys = conn.execute("PRAGMA foreign_key_list(claims)").fetchall()
+    linked_to_old_rentals = any(key[2] == 'rentals' for key in claim_foreign_keys)
+    if linked_to_old_rentals:
+        conn.commit()
+        conn.execute("PRAGMA foreign_keys = OFF")
+        conn.execute("""CREATE TABLE claims_rebuilt (
+            claimid INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            rentalid INTEGER NOT NULL,
+            providerid INTEGER NOT NULL,
+            description TEXT NOT NULL,
+            evidence_photo TEXT NOT NULL DEFAULT '',
+            claim_charge REAL NOT NULL DEFAULT 0 CHECK (claim_charge >= 0),
+            status TEXT NOT NULL DEFAULT 'open',
+            created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+            reviewed_at DATE NULL,
+            FOREIGN KEY(rentalid) REFERENCES tool_rentals(rentalid),
+            FOREIGN KEY(providerid) REFERENCES users(userid)
+        )""")
+        conn.execute("""INSERT INTO claims_rebuilt
+            (claimid, rentalid, providerid, description, evidence_photo,
+             claim_charge, status, created_at, reviewed_at)
+            SELECT c.claimid, c.rentalid, c.providerid, c.description,
+                   COALESCE(c.evidence_photo, ''), COALESCE(c.claim_charge, 0),
+                   CASE WHEN c.status IN ('open', 'reviewing', 'accepted', 'denied')
+                        THEN c.status ELSE 'open' END,
+                   COALESCE(c.created_at, datetime('now','localtime')),
+                   c.reviewed_at
+            FROM claims c
+            JOIN tool_rentals tr ON tr.rentalid = c.rentalid
+                              AND tr.providerid = c.providerid
+            JOIN users provider ON provider.userid = c.providerid""")
+        conn.execute("DROP TABLE claims")
+        conn.execute("ALTER TABLE claims_rebuilt RENAME TO claims")
+        conn.commit()
+        conn.execute("PRAGMA foreign_keys = ON")
+        app.logger.info('Rebuilt legacy claims table to link to tool_rentals.')
+
+    # One reviews table now records feedback from either person in a rental.
+    # Copy older provider and renter review records into it if they exist.
+    review_columns = {column[1] for column in conn.execute("PRAGMA table_info(reviews)").fetchall()}
+    if 'created_at' not in review_columns:
+        conn.execute("ALTER TABLE reviews ADD COLUMN created_at DATE NOT NULL DEFAULT ''")
+    existing_tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+    if 'ratings' in existing_tables:
+        conn.execute("""INSERT OR IGNORE INTO reviews (rentalid, authorid, rating, comment)
+            SELECT r.rentalid, r.providerid, r.rating, r.comment FROM ratings r
+            JOIN tool_rentals tr ON tr.rentalid = r.rentalid AND tr.providerid = r.providerid
+            WHERE r.rating BETWEEN 1 AND 5""")
+    if 'renter_reviews' in existing_tables:
+        conn.execute("""INSERT OR IGNORE INTO reviews (rentalid, authorid, rating, comment, created_at)
+            SELECT r.rentalid, r.renterid, r.rating, r.comment, r.created_at FROM renter_reviews r
+            JOIN tool_rentals tr ON tr.rentalid = r.rentalid AND tr.renterid = r.renterid
+            WHERE r.rating BETWEEN 1 AND 5""")
+
+    message_info = conn.execute("PRAGMA table_info(messages)").fetchall()
+    message_columns = {column[1] for column in message_info}
     for column, definition in {
-        'conversationid': 'INTEGER',
-        'authorid': 'INTEGER',
-        'created_at': "DATE NOT NULL DEFAULT ''"
+        'toolid': 'INTEGER', 'senderid': 'INTEGER', 'recipientid': 'INTEGER'
     }.items():
         if column not in message_columns:
             conn.execute(f"ALTER TABLE messages ADD COLUMN {column} {definition}")
-    if 'author' in message_columns:
-        conn.execute("UPDATE messages SET authorid = author WHERE authorid IS NULL")
+    if 'conversationid' in message_columns:
+        old_author_column = 'authorid' if 'authorid' in message_columns else ('author' if 'author' in message_columns else 'NULL')
+        conn.execute(f"""UPDATE messages SET
+            toolid = COALESCE(toolid, (SELECT toolid FROM conversations WHERE conversations.conversationid = messages.conversationid)),
+            senderid = COALESCE(senderid, {old_author_column}),
+            recipientid = COALESCE(recipientid, (SELECT CASE WHEN renterid = {old_author_column}
+                THEN providerid ELSE renterid END FROM conversations WHERE conversations.conversationid = messages.conversationid))
+            WHERE toolid IS NULL OR senderid IS NULL OR recipientid IS NULL""")
+    # The old messages table required a conversation ID.  Rebuild it once so
+    # new messages can use the simpler tool/sender/recipient design.
+    legacy_message_fields = {'conversationid', 'author', 'authorid'}
+    legacy_message_required = any(column[1] in legacy_message_fields and column[3] for column in message_info)
+    if legacy_message_required:
+        conn.commit()
+        conn.execute("PRAGMA foreign_keys = OFF")
+        conn.execute("""CREATE TABLE messages_rebuilt (
+            messageid INTEGER PRIMARY KEY AUTOINCREMENT,
+            toolid INTEGER NOT NULL,
+            senderid INTEGER NOT NULL,
+            recipientid INTEGER NOT NULL,
+            messagetext TEXT NOT NULL,
+            created_at DATE NOT NULL DEFAULT (datetime('now','localtime')),
+            FOREIGN KEY(toolid) REFERENCES tools(toolid),
+            FOREIGN KEY(senderid) REFERENCES users(userid),
+            FOREIGN KEY(recipientid) REFERENCES users(userid)
+        )""")
+        conn.execute("""INSERT INTO messages_rebuilt
+            (messageid, toolid, senderid, recipientid, messagetext, created_at)
+            SELECT messageid, toolid, senderid, recipientid, messagetext,
+                   COALESCE(created_at, datetime('now','localtime'))
+            FROM messages
+            WHERE toolid IS NOT NULL AND senderid IS NOT NULL AND recipientid IS NOT NULL
+              AND messagetext IS NOT NULL""")
+        conn.execute("DROP TABLE messages")
+        conn.execute("ALTER TABLE messages_rebuilt RENAME TO messages")
+        conn.commit()
+        conn.execute("PRAGMA foreign_keys = ON")
+        app.logger.info('Rebuilt legacy messages table using the simplified design.')
     # Existing databases cannot add NOT NULL or FOREIGN KEY constraints with
     # ALTER TABLE. Apply the rules that SQLite can safely add in place.
-    conn.execute("UPDATE users SET permission = 'user' WHERE permission IS NULL")
-    conn.execute("UPDATE users SET lastaccess = datetime('now','localtime') WHERE lastaccess IS NULL")
+    conn.execute("UPDATE users SET permission = 'User (Renter)' WHERE permission IS NULL")
+    user_columns = {column[1] for column in conn.execute("PRAGMA table_info(users)").fetchall()}
+    if 'lastaccess' in user_columns:
+        conn.execute("UPDATE users SET lastaccess = datetime('now','localtime') WHERE lastaccess IS NULL")
     try:
         conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_unique ON users(email)")
     except sqlite3.IntegrityError:
@@ -222,6 +317,7 @@ def migrate_database():
 init_database()
 migrate_database()
 DATABASE = Database("database/test.db", app.logger)
+
 
 #---VIEW FUNCTIONS----------------------------------------------------
 @app.route('/')
@@ -278,31 +374,26 @@ def admin():
                 flash('This claim was already accepted; no duplicate message was sent.')
             elif claim_status == 'accepted':
                 claim_charge = 0 if claim[0]['insurance_selected'] else float(claim[0]['security_deposit'])
-                conversation = open_conversation(claim[0]['toolid'], claim[0]['renterid'], claim[0]['providerid'])
-                if not conversation:
-                    flash('The claim could not be accepted because the renter conversation could not be opened.')
+                if claim[0]['insurance_selected']:
+                    charge_text = 'Renter insurance was selected, so there is no simulated claim charge.'
                 else:
-                    if claim[0]['insurance_selected']:
-                        charge_text = 'Renter insurance was selected, so there is no simulated claim charge.'
-                    else:
-                        charge_text = f"Renter insurance was not selected, so a simulated charge of ${claim_charge:.2f} has been applied against the security deposit."
-                    notice = f"Toolly claim decision: the provider claim for {claim[0]['title']} was accepted. {charge_text}"
-                    saved = DATABASE.ModifyMany([
-                        ("UPDATE claims SET status = 'accepted', claim_charge = ?, reviewed_at = datetime('now','localtime'), reviewed_by = ? WHERE claimid = ?", (claim_charge, session['userid'], claim_id)),
-                        ("INSERT INTO messages (conversationid, author, authorid, messagetext, created_at) VALUES (?, ?, ?, ?, datetime('now','localtime'))", (conversation[0]['conversationid'], claim[0]['providerid'], claim[0]['providerid'], notice)),
-                        ("UPDATE conversations SET last_message_at = datetime('now','localtime') WHERE conversationid = ?", (conversation[0]['conversationid'],))
-                    ])
-                    flash('Claim accepted and an automatic notice was sent to the renter.' if saved else 'The claim could not be accepted.')
+                    charge_text = f"Renter insurance was not selected, so a simulated charge of ${claim_charge:.2f} has been applied against the security deposit."
+                notice = f"Toolly claim decision: the provider claim for {claim[0]['title']} was accepted. {charge_text}"
+                saved = DATABASE.ModifyMany([
+                    ("UPDATE claims SET status = 'accepted', claim_charge = ?, reviewed_at = datetime('now','localtime') WHERE claimid = ?", (claim_charge, claim_id)),
+                    ("INSERT INTO messages (toolid, senderid, recipientid, messagetext, created_at) VALUES (?, ?, ?, ?, datetime('now','localtime'))", (claim[0]['toolid'], claim[0]['providerid'], claim[0]['renterid'], notice))
+                ])
+                flash('Claim accepted and an automatic notice was sent to the renter.' if saved else 'The claim could not be accepted.')
             elif claim_status == 'denied':
                 saved = DATABASE.ModifyQuery(
-                    "UPDATE claims SET status = 'denied', claim_charge = 0, reviewed_at = datetime('now','localtime'), reviewed_by = ? WHERE claimid = ?",
-                    (session['userid'], claim_id)
+                    "UPDATE claims SET status = 'denied', claim_charge = 0, reviewed_at = datetime('now','localtime') WHERE claimid = ?",
+                    (claim_id,)
                 )
                 flash('Claim denied.' if saved else 'The claim could not be updated.')
             else:
                 saved = DATABASE.ModifyQuery(
-                    "UPDATE claims SET status = 'reviewing', reviewed_at = datetime('now','localtime'), reviewed_by = ? WHERE claimid = ?",
-                    (session['userid'], claim_id)
+                    "UPDATE claims SET status = 'reviewing', reviewed_at = datetime('now','localtime') WHERE claimid = ?",
+                    (claim_id,)
                 )
                 flash('Claim marked as reviewing.' if saved else 'The claim could not be updated.')
         else:
@@ -322,8 +413,7 @@ def admin():
         (SELECT COUNT(*) FROM tools WHERE is_available = 1) AS available_tools_count,
         (SELECT COUNT(*) FROM tool_rentals WHERE status = 'active') AS active_rentals_count,
         (SELECT COUNT(*) FROM tool_rentals WHERE status = 'completed') AS completed_rentals_count,
-        (SELECT COUNT(*) FROM claims WHERE status IN ('open', 'reviewing')) AS open_claims_count,
-        (SELECT COUNT(*) FROM conversations) AS conversations_count""")[0]
+        (SELECT COUNT(*) FROM claims WHERE status IN ('open', 'reviewing')) AS open_claims_count""")[0]
     results = DATABASE.ViewQuery("""SELECT users.userid, users.firstname, users.lastname, users.email,
         users.permission, users.status, users.profilephoto, users.lastaccess,
         (SELECT COUNT(*) FROM tools WHERE tools.providerid = users.userid) AS listing_count,
@@ -346,7 +436,7 @@ def admin():
         JOIN tools ON tools.toolid = tool_rentals.toolid
         JOIN users ON users.userid = claims.providerid
         JOIN users AS renter ON renter.userid = tool_rentals.renterid
-        WHERE claims.status IN ('open', 'reviewing') ORDER BY claims.created_at DESC LIMIT 8""") or []
+        WHERE claims.status IN ('open', 'reviewing') ORDER BY claims.created_at DESC""") or []
     app.logger.info("Admin")
     return render_template("admin.html", summary=summary, results=results, active_rentals=active_rentals, open_claims=open_claims)
 
@@ -471,7 +561,7 @@ def provider_edit_listing(tool_id):
 
         DATABASE.ModifyQuery(
             """UPDATE tools SET title = ?, description = ?, daily_rate = ?, original_value = ?, city = ?, suburb = ?, location = ?, tool_type = ?, brand = ?, tool_condition = ?, toolphoto = ?, available_from = ?, available_until = ?
-               WHERE toolid = ? AND providerid = ?""",
+                WHERE toolid = ? AND providerid = ?""",
             (tool_data['title'], tool_data['description'], tool_data['daily_rate'], tool_data['original_value'], tool_data['city'], tool_data['suburb'], tool_data['location'], tool_data['tool_type'], tool_data['brand'], tool_data['tool_condition'], tool_photo_path, tool_data['available_from'], tool_data['available_until'], tool_id, session['userid'])
         )
         flash('Your tool listing has been updated.')
@@ -533,7 +623,10 @@ def provider_past_rentals():
             rating = request.form.get('rating', type=int)
             comment = request.form.get('comment', '').strip()
             if rating and 1 <= rating <= 5:
-                DATABASE.ModifyQuery("INSERT OR REPLACE INTO ratings (rentalid, providerid, renterid, rating, comment) VALUES (?, ?, ?, ?, ?)", (rental_id, session['userid'], rental[0]['renterid'], rating, comment))
+                DATABASE.ModifyQuery(
+                    "INSERT OR REPLACE INTO reviews (rentalid, authorid, rating, comment) VALUES (?, ?, ?, ?)",
+                    (rental_id, session['userid'], rating, comment)
+                )
                 flash('Customer rating saved.')
         elif request.form.get('action') == 'claim':
             description = request.form.get('description', '').strip()
@@ -590,20 +683,8 @@ def member_only():
     return session.get('permission') in ('User (Renter)', 'User (Tool Provider)') and 'userid' in session
 
 
-def open_conversation(tool_id, renter_id, provider_id):
-    """Create one conversation per renter/provider/tool combination."""
-    DATABASE.ModifyQuery(
-        "INSERT OR IGNORE INTO conversations (toolid, renterid, providerid) VALUES (?, ?, ?)",
-        (tool_id, renter_id, provider_id)
-    )
-    return DATABASE.ViewQuery(
-        "SELECT conversationid FROM conversations WHERE toolid = ? AND renterid = ? AND providerid = ?",
-        (tool_id, renter_id, provider_id)
-    )
-
-
 @app.route('/messages/start/tool/<int:tool_id>', methods=['POST'])
-def start_tool_conversation(tool_id):
+def start_tool_message(tool_id):
     """Let a renter contact the provider directly from a listing."""
     if not renter_only():
         return redirect('./')
@@ -611,15 +692,11 @@ def start_tool_conversation(tool_id):
     if not tool:
         flash('That tool listing is no longer available.')
         return redirect('/renter/browse')
-    conversation = open_conversation(tool_id, session['userid'], tool[0]['providerid'])
-    if conversation:
-        return redirect(url_for('messages', conversation=conversation[0]['conversationid']))
-    flash('Conversation could not be opened. Please try again.')
-    return redirect('/renter/browse')
+    return redirect(url_for('messages', tool=tool_id, member=tool[0]['providerid']))
 
 
 @app.route('/messages/start/rental/<int:rental_id>', methods=['POST'])
-def start_rental_conversation(rental_id):
+def start_rental_message(rental_id):
     """Allow either party in an active rental to contact the other."""
     if not member_only():
         return redirect('./')
@@ -628,64 +705,86 @@ def start_rental_conversation(rental_id):
         (rental_id, session['userid'], session['userid'])
     )
     if not rental:
-        flash('You do not have access to that rental conversation.')
+        flash('You do not have access to that rental chat.')
         return redirect('/home')
-    conversation = open_conversation(rental[0]['toolid'], rental[0]['renterid'], rental[0]['providerid'])
-    if conversation:
-        return redirect(url_for('messages', conversation=conversation[0]['conversationid']))
-    flash('Conversation could not be opened. Please try again.')
-    return redirect('/home')
+    other_member = rental[0]['providerid'] if rental[0]['renterid'] == session['userid'] else rental[0]['renterid']
+    return redirect(url_for('messages', tool=rental[0]['toolid'], member=other_member))
 
 
 @app.route('/messages', methods=['GET', 'POST'])
 def messages():
-    """Show the signed-in member's conversations and save their new messages."""
+    """Show messages for one tool and the other person involved."""
     if not member_only():
         return redirect('./')
 
     user_id = session['userid']
-    conversations = DATABASE.ViewQuery(
-        """SELECT conversations.*, tools.title,
-                  CASE WHEN conversations.renterid = ?
-                       THEN provider.firstname || ' ' || provider.lastname
-                       ELSE renter.firstname || ' ' || renter.lastname END AS other_member
-           FROM conversations
-           JOIN tools ON tools.toolid = conversations.toolid
-           JOIN users AS renter ON renter.userid = conversations.renterid
-           JOIN users AS provider ON provider.userid = conversations.providerid
-           WHERE conversations.renterid = ? OR conversations.providerid = ?
-           ORDER BY conversations.last_message_at DESC, conversations.conversationid DESC""",
-        (user_id, user_id, user_id)
+    message_threads = DATABASE.ViewQuery(
+        """SELECT messages.toolid,
+                  CASE WHEN messages.senderid = ? THEN messages.recipientid ELSE messages.senderid END AS otherid,
+                  tools.title, users.firstname || ' ' || users.lastname AS other_member,
+                  MAX(messages.messageid) AS last_messageid
+           FROM messages
+           JOIN tools ON tools.toolid = messages.toolid
+           JOIN users ON users.userid = CASE WHEN messages.senderid = ? THEN messages.recipientid ELSE messages.senderid END
+           WHERE messages.senderid = ? OR messages.recipientid = ?
+           GROUP BY messages.toolid, otherid, tools.title, users.firstname, users.lastname
+           ORDER BY last_messageid DESC""",
+        (user_id, user_id, user_id, user_id)
     ) or []
-    selected_id = request.values.get('conversation', type=int)
-    if not selected_id and conversations:
-        selected_id = conversations[0]['conversationid']
-    selected = next((item for item in conversations if item['conversationid'] == selected_id), None)
+    tool_id = request.values.get('tool', type=int)
+    other_id = request.values.get('member', type=int)
+    if not tool_id and message_threads:
+        tool_id, other_id = message_threads[0]['toolid'], message_threads[0]['otherid']
+    selected = next((item for item in message_threads if item['toolid'] == tool_id and item['otherid'] == other_id), None)
+
+    # Starting a new chat has no previous message, so look up its title/name.
+    if tool_id and other_id and not selected:
+        if renter_only():
+            selected = DATABASE.ViewQuery(
+                """SELECT tools.toolid, tools.title, users.userid AS otherid,
+                          users.firstname || ' ' || users.lastname AS other_member
+                   FROM tools JOIN users ON users.userid = tools.providerid
+                   WHERE tools.toolid = ? AND tools.providerid = ?""",
+                (tool_id, other_id)
+            )
+        else:
+            selected = DATABASE.ViewQuery(
+                """SELECT tools.toolid, tools.title, users.userid AS otherid,
+                          users.firstname || ' ' || users.lastname AS other_member
+                   FROM tools JOIN users ON users.userid = ?
+                   WHERE tools.toolid = ? AND tools.providerid = ?
+                     AND EXISTS (SELECT 1 FROM tool_rentals
+                                 WHERE tool_rentals.toolid = tools.toolid AND renterid = ?)""",
+                (other_id, tool_id, user_id, other_id)
+            )
+        selected = selected[0] if selected else None
 
     if request.method == 'POST':
         message_text = request.form.get('message_text', '').strip()
         if not selected:
-            flash('Choose a conversation before sending a message.')
+            flash('Choose a chat before sending a message.')
         elif not message_text or len(message_text) > 1000:
             flash('Messages must be between 1 and 1,000 characters.')
         else:
-            saved = DATABASE.ModifyMany([
-                ("INSERT INTO messages (conversationid, author, authorid, messagetext, created_at) VALUES (?, ?, ?, ?, datetime('now','localtime'))",
-                 (selected_id, user_id, user_id, message_text)),
-                ("UPDATE conversations SET last_message_at = datetime('now','localtime') WHERE conversationid = ?", (selected_id,))
-            ])
+            saved = DATABASE.ModifyQuery(
+                "INSERT INTO messages (toolid, senderid, recipientid, messagetext, created_at) VALUES (?, ?, ?, ?, datetime('now','localtime'))",
+                (tool_id, user_id, other_id, message_text)
+            )
             flash('Message sent.' if saved else 'Your message could not be sent. Please try again.')
-        return redirect(url_for('messages', conversation=selected_id) if selected_id else url_for('messages'))
+        return redirect(url_for('messages', tool=tool_id, member=other_id) if selected else url_for('messages'))
 
     chat_messages = []
     if selected:
         chat_messages = DATABASE.ViewQuery(
             """SELECT messages.*, users.firstname || ' ' || users.lastname AS author_name
-               FROM messages JOIN users ON users.userid = messages.authorid
-               WHERE messages.conversationid = ? ORDER BY messages.messageid ASC""",
-            (selected_id,)
+               FROM messages JOIN users ON users.userid = messages.senderid
+               WHERE messages.toolid = ?
+                 AND ((messages.senderid = ? AND messages.recipientid = ?)
+                   OR (messages.senderid = ? AND messages.recipientid = ?))
+               ORDER BY messages.messageid ASC""",
+            (tool_id, user_id, other_id, other_id, user_id)
         ) or []
-    return render_template('messages.html', conversations=conversations, selected=selected, chat_messages=chat_messages)
+    return render_template('messages.html', message_threads=message_threads, selected=selected, chat_messages=chat_messages)
 
 @app.route('/renter/browse', methods=['GET', 'POST'])
 def renter_browse():
@@ -700,10 +799,7 @@ def renter_browse():
         elif tool and request.form.get('action') == 'rent':
             return redirect(url_for('renter_book_tool', tool_id=tool_id))
         elif tool and request.form.get('action') == 'message':
-            conversation = open_conversation(tool_id, session['userid'], tool[0]['providerid'])
-            if conversation:
-                return redirect(url_for('messages', conversation=conversation[0]['conversationid']))
-            flash('Conversation could not be opened. Please try again.')
+            return redirect(url_for('messages', tool=tool_id, member=tool[0]['providerid']))
         return redirect('/renter/browse')
     filters = {key: request.args.get(key, '').strip() for key in ('city', 'suburb', 'tool_type', 'brand', 'tool_condition', 'available_on')}
     max_price = request.args.get('max_price', '').strip()
@@ -714,7 +810,7 @@ def renter_browse():
         if filters[field]:
             if field in ('city', 'suburb', 'tool_condition'):
                 # These are controlled dropdown values, so equality is faster
-                # and lets SQLite use the location/filter indexes.
+                # and lets SQLite use the filter indexes.
                 query += f" AND tools.{field} = ?"
                 params.append(filters[field])
             else:
@@ -833,18 +929,19 @@ def renter_past_rentals():
             flash('Choose a rating from 1 to 5 stars.')
         else:
             review_saved = DATABASE.ModifyQuery(
-                """INSERT OR REPLACE INTO renter_reviews (rentalid, toolid, providerid, renterid, rating, comment, created_at)
-                   VALUES (?, ?, ?, ?, ?, ?, datetime('now','localtime'))""",
-                (rental_id, rental[0]['toolid'], rental[0]['providerid'], session['userid'], rating, comment)
+                """INSERT OR REPLACE INTO reviews (rentalid, authorid, rating, comment, created_at)
+                   VALUES (?, ?, ?, ?, datetime('now','localtime'))""",
+                (rental_id, session['userid'], rating, comment)
             )
             flash('Your review has been saved.' if review_saved else 'Your review could not be saved. Please try again.')
         return redirect('/renter/past-rentals')
 
     rentals = DATABASE.ViewQuery("""SELECT tool_rentals.*, tools.title, users.firstname || ' ' || users.lastname AS provider_name,
-                                  renter_reviews.rating AS review_rating, renter_reviews.comment AS review_comment
+                                  reviews.rating AS review_rating, reviews.comment AS review_comment
                                   FROM tool_rentals JOIN tools ON tools.toolid = tool_rentals.toolid
                                   JOIN users ON users.userid = tool_rentals.providerid
-                                  LEFT JOIN renter_reviews ON renter_reviews.rentalid = tool_rentals.rentalid
+                                  LEFT JOIN reviews ON reviews.rentalid = tool_rentals.rentalid
+                                      AND reviews.authorid = tool_rentals.renterid
                                   WHERE tool_rentals.renterid = ? AND tool_rentals.status = 'completed'
                                   ORDER BY tool_rentals.completed_at DESC""", (session['userid'],)) or []
     return render_template('renter_rentals.html', rentals=rentals, title='Past Rentals')
@@ -990,6 +1087,16 @@ def serve_tool_photo(filename):
 
 @app.route('/claimphotos/<filename>')
 def serve_claim_photo(filename):
+    if 'userid' not in session:
+        abort(403)
+    stored_path = os.path.join(CLAIM_UPLOAD_FOLDER, filename).replace('\\', '/')
+    claim = DATABASE.ViewQuery(
+        """SELECT claims.claimid FROM claims JOIN tool_rentals ON tool_rentals.rentalid = claims.rentalid
+           WHERE claims.evidence_photo = ? AND (claims.providerid = ? OR tool_rentals.renterid = ? OR ? = 'admin')""",
+        (stored_path, session['userid'], session['userid'], session.get('permission'))
+    )
+    if not claim:
+        abort(403)
     return send_from_directory(app.config['CLAIM_UPLOAD_FOLDER'], filename)
 
 #main method called web server application
