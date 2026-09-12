@@ -7,7 +7,7 @@
         <form method="POST" class="row g-3 mt-2" id="booking-form" data-rate="{{ tool.daily_rate }}" data-value="{{ tool.original_value }}">
             <div class="col-md-6"><label class="form-label" for="start_date">Rental starts</label><input class="form-control" id="start_date" name="start_date" type="date" min="{{ tool.available_from }}" max="{{ tool.available_until }}" required></div>
             <div class="col-md-6"><label class="form-label" for="end_date">Rental ends</label><input class="form-control" id="end_date" name="end_date" type="date" min="{{ tool.available_from }}" max="{{ tool.available_until }}" required></div>
-            <div class="col-12"><div class="form-check"><input class="form-check-input" id="insurance" name="insurance" type="checkbox"><label class="form-check-label" for="insurance">Add renter’s insurance</label></div><div class="form-text">Insurance starts at $5 for tools under $100 and doubles for every additional $100 of original value.</div></div>
+            <div class="col-12"><div class="form-check"><input class="form-check-input" id="insurance" name="insurance" type="checkbox"><label class="form-check-label" for="insurance">Add renter’s insurance</label></div><div class="form-text">Insurance is $5 up to $100, then doubles in each next $100 value band: $10 up to $200, $20 up to $300, and so on.</div></div>
             <div class="col-12"><section class="price-breakdown"><h2>Price breakdown</h2><dl><div><dt>Rental duration</dt><dd id="rental-days">Choose dates</dd></div><div><dt>Rental cost</dt><dd id="rental-cost">$0.00</dd></div><div><dt>Refundable security deposit (10%)</dt><dd id="deposit-cost">$0.00</dd></div><div><dt>Renter’s insurance</dt><dd id="insurance-cost">$0.00</dd></div><div class="price-total"><dt>Total due today</dt><dd id="total-cost">$0.00</dd></div></dl></section></div>
             <div class="col-12"><button class="btn btn-primary">Confirm simulated payment</button></div>
         </form>
@@ -21,6 +21,11 @@
     const endInput = document.getElementById('end_date');
     const insuranceInput = document.getElementById('insurance');
     const money = value => `$${value.toFixed(2)}`;
+    const calculateInsurance = value => {
+        if (!Number.isFinite(value) || value <= 0) return 0;
+        const band = Math.max(0, Math.ceil(value / 100) - 1);
+        return 5 * (2 ** band);
+    };
     function updateBreakdown() {
         const rate = Number(bookingForm.dataset.rate);
         const originalValue = Number(bookingForm.dataset.value);
@@ -31,14 +36,15 @@
             if (days < 1) days = 0;
         }
         const rental = rate * days;
-        const insurance = insuranceInput.checked ? 5 * (2 ** Math.max(0, Math.floor((originalValue - 0.01) / 100))) : 0;
+        const insurance = insuranceInput.checked ? calculateInsurance(originalValue) : 0;
         document.getElementById('rental-days').textContent = days ? `${days} day${days === 1 ? '' : 's'}` : 'Choose valid dates';
         document.getElementById('rental-cost').textContent = money(rental);
         document.getElementById('deposit-cost').textContent = money(deposit);
         document.getElementById('insurance-cost').textContent = money(insurance);
         document.getElementById('total-cost').textContent = money(rental + deposit + insurance);
     }
-    [startInput, endInput, insuranceInput].forEach(input => input.addEventListener('change', updateBreakdown));
+    [startInput, endInput].forEach(input => input.addEventListener('input', updateBreakdown));
+    insuranceInput.addEventListener('change', updateBreakdown);
     updateBreakdown();
 </script>
 {% endblock %}

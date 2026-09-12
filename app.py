@@ -1,5 +1,5 @@
 from flask import Flask, abort, flash, redirect, render_template, request, send_from_directory, session, url_for
-import sys, os, uuid
+import sys, os, uuid, math
 from datetime import date
 import logging
 from interfaces.databaseinterface import Database
@@ -86,6 +86,16 @@ def read_tool_form():
         'location': f"{fields['suburb']}, {fields['city']}"
     })
     return fields, None
+
+
+def calculate_insurance(original_value):
+    """Return the optional renter-insurance price from the tool's value.
+
+    Toolly uses clear $100 value bands: $5 up to $100, then the price doubles
+    for each next $100 band ($10, $20, $40, and so on).
+    """
+    band = max(0, math.ceil(original_value / 100) - 1)
+    return 5 * (2 ** band)
 
 
 def create_account(permission):
@@ -861,7 +871,7 @@ def renter_book_tool(tool_id):
         rental_cost = tool['daily_rate'] * rental_days
         security_deposit = tool['original_value'] * 0.10
         insurance_selected = 1 if request.form.get('insurance') else 0
-        insurance_cost = (5 * (2 ** max(0, int((tool['original_value'] - 0.01) // 100)))) if insurance_selected else 0
+        insurance_cost = calculate_insurance(tool['original_value']) if insurance_selected else 0
         total = rental_cost + security_deposit + insurance_cost
         booked = DATABASE.ModifyMany([
             ("""INSERT INTO tool_rentals (toolid, renterid, providerid, total, start_date, end_date, rental_days, rental_cost, security_deposit, insurance_selected, insurance_cost)
